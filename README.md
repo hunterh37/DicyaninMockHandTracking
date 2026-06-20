@@ -2,6 +2,8 @@
 
 Simulated hand tracking for visionOS. Drives mock hand positions and pinch gestures so hand-tracked apps can be developed and tested in the visionOS simulator, where ARKit hand tracking isn't available.
 
+The idea: write your app against one hand-pose source. In the **simulator** it reads from `MockHandTrackingController` and you steer the hands with an on-screen control panel. On a **real device** the exact same call sites read live ARKit `HandAnchor` data — no changes to your app logic.
+
 | Resting | Aiming + pinch |
 | --- | --- |
 | ![Control panel](Screenshots/control-panel.png) | ![Control panel, active](Screenshots/control-panel-active.png) |
@@ -48,6 +50,66 @@ import DicyaninMockHandTracking
 MockHandControlView()
 ```
 
+## Simulator vs. device
+
+Put the source switch behind a single type so your app never branches on environment. In the simulator it reads the mock controller; on device it reads ARKit `HandAnchor`s:
+
+```swift
+import simd
+import DicyaninMockHandTracking
+#if !targetEnvironment(simulator)
+import ARKit
+#endif
+
+struct HandPose {
+    var position: SIMD3<Float>
+    var isPinching: Bool
+}
+
+@MainActor
+final class HandSource {
+    #if targetEnvironment(simulator)
+    // --- Simulator: driven by MockHandControlView ---
+    private let mock = MockHandTrackingController.shared
+
+    func rightHand() -> HandPose {
+        HandPose(position: mock.rightHandPosition, isPinching: mock.isPinching)
+    }
+
+    /// 60 fps tick stream you can await in your update loop.
+    func updates() -> AsyncStream<Void> { mock.updates() }
+
+    #else
+    // --- Device: real ARKit hand tracking ---
+    private let session = ARKitSession()
+    private let provider = HandTrackingProvider()
+
+    func start() async throws {
+        try await session.run([provider])
+    }
+
+    func rightHand() -> HandPose {
+        guard let anchor = provider.latestAnchors.rightHand,
+              anchor.isTracked,
+              let wrist = anchor.handSkeleton?.joint(.wrist) else {
+            return HandPose(position: .zero, isPinching: false)
+        }
+        let m = anchor.originFromAnchorTransform * wrist.anchorFromJointTransform
+        let position = SIMD3<Float>(m.columns.3.x, m.columns.3.y, m.columns.3.z)
+        return HandPose(position: position, isPinching: detectPinch(anchor))
+    }
+    #endif
+}
+```
+
+Your game/app code then just calls `handSource.rightHand()` and never knows which backend produced it. Swap `MockHandControlView()` into a window only in simulator builds:
+
+```swift
+#if targetEnvironment(simulator)
+MockHandControlView()
+#endif
+```
+
 ## Requirements
 
 - visionOS 1.0+
@@ -55,10 +117,10 @@ MockHandControlView()
 
 ## Regenerating README screenshots
 
-The images above are rendered from the SwiftUI control views by a small macOS tool (no simulator or screen-recording permission needed):
+The images above are captured from the real SwiftUI control views by a small macOS tool. It launches a live window and captures it through the WindowServer (via `screencapture`), so materials, blur, and control tints render exactly as on screen:
 
 ```bash
 Tools/ScreenshotApp/generate.sh
 ```
 
-Output PNGs land in `Screenshots/`.
+Output PNGs land in `Screenshots/`. Requires Screen Recording permission for your terminal (System Settings → Privacy & Security → Screen Recording).
