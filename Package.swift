@@ -2,15 +2,15 @@
 import PackageDescription
 
 let package = Package(
-    name: "MockHandTracking",
+    name: "DicyaninMockHandTracking",
     platforms: [.visionOS(.v1)],
     products: [
-        .library(name: "MockHandTracking", targets: ["MockHandTracking"])
+        .library(name: "DicyaninMockHandTracking", targets: ["DicyaninMockHandTracking"])
     ],
     targets: [
         .target(
-            name: "MockHandTracking",
-            path: "Sources/MockHandTracking"
+            name: "DicyaninMockHandTracking",
+            path: "Sources/DicyaninMockHandTracking"
         )
     ]
 )

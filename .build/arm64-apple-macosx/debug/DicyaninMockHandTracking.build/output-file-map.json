@@ -1,0 +1,19 @@
+{
+  "": {
+    "swift-dependencies": "/Users/hunter/Dev/ZombieShooter/MockHandTracking/.build/arm64-apple-macosx/debug/DicyaninMockHandTracking.build/primary.swiftdeps"
+  },
+  "/Users/hunter/Dev/ZombieShooter/MockHandTracking/Sources/DicyaninMockHandTracking/MockHandControlView.swift": {
+    "dependencies": "/Users/hunter/Dev/ZombieShooter/MockHandTracking/.build/arm64-apple-macosx/debug/DicyaninMockHandTracking.build/MockHandControlView.d",
+    "object": "/Users/hunter/Dev/ZombieShooter/MockHandTracking/.build/arm64-apple-macosx/debug/DicyaninMockHandTracking.build/MockHandControlView.swift.o",
+    "swiftmodule": "/Users/hunter/Dev/ZombieShooter/MockHandTracking/.build/arm64-apple-macosx/debug/DicyaninMockHandTracking.build/MockHandControlView~partial.swiftmodule",
+    "swift-dependencies": "/Users/hunter/Dev/ZombieShooter/MockHandTracking/.build/arm64-apple-macosx/debug/DicyaninMockHandTracking.build/MockHandControlView.swiftdeps",
+    "diagnostics": "/Users/hunter/Dev/ZombieShooter/MockHandTracking/.build/arm64-apple-macosx/debug/DicyaninMockHandTracking.build/MockHandControlView.dia"
+  },
+  "/Users/hunter/Dev/ZombieShooter/MockHandTracking/Sources/DicyaninMockHandTracking/MockHandTrackingController.swift": {
+    "dependencies": "/Users/hunter/Dev/ZombieShooter/MockHandTracking/.build/arm64-apple-macosx/debug/DicyaninMockHandTracking.build/MockHandTrackingController.d",
+    "object": "/Users/hunter/Dev/ZombieShooter/MockHandTracking/.build/arm64-apple-macosx/debug/DicyaninMockHandTracking.build/MockHandTrackingController.swift.o",
+    "swiftmodule": "/Users/hunter/Dev/ZombieShooter/MockHandTracking/.build/arm64-apple-macosx/debug/DicyaninMockHandTracking.build/MockHandTrackingController~partial.swiftmodule",
+    "swift-dependencies": "/Users/hunter/Dev/ZombieShooter/MockHandTracking/.build/arm64-apple-macosx/debug/DicyaninMockHandTracking.build/MockHandTrackingController.swiftdeps",
+    "diagnostics": "/Users/hunter/Dev/ZombieShooter/MockHandTracking/.build/arm64-apple-macosx/debug/DicyaninMockHandTracking.build/MockHandTrackingController.dia"
+  }
+}

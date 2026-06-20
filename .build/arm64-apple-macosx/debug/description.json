@@ -1,0 +1,238 @@
+{
+  "builtTestProducts" : [
+
+  ],
+  "copyCommands" : {
+
+  },
+  "explicitTargetDependencyImportCheckingMode" : {
+    "none" : {
+
+    }
+  },
+  "generatedSourceTargetSet" : [
+
+  ],
+  "pluginDescriptions" : [
+
+  ],
+  "swiftCommands" : {
+    "C.DicyaninMockHandTracking-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode 2.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/hunter/Dev/ZombieShooter/MockHandTracking/.build/arm64-apple-macosx/debug/DicyaninMockHandTracking.build/sources",
+      "importPath" : "/Users/hunter/Dev/ZombieShooter/MockHandTracking/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/hunter/Dev/ZombieShooter/MockHandTracking/Sources/DicyaninMockHandTracking/MockHandControlView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/hunter/Dev/ZombieShooter/MockHandTracking/Sources/DicyaninMockHandTracking/MockHandTrackingController.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/hunter/Dev/ZombieShooter/MockHandTracking/.build/arm64-apple-macosx/debug/swift-version-BF9FFD6CEA9A4E.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/hunter/Dev/ZombieShooter/MockHandTracking/.build/arm64-apple-macosx/debug/DicyaninMockHandTracking.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "DicyaninMockHandTracking",
+      "moduleOutputPath" : "/Users/hunter/Dev/ZombieShooter/MockHandTracking/.build/arm64-apple-macosx/debug/Modules/DicyaninMockHandTracking.swiftmodule",
+      "objects" : [
+        "/Users/hunter/Dev/ZombieShooter/MockHandTracking/.build/arm64-apple-macosx/debug/DicyaninMockHandTracking.build/MockHandControlView.swift.o",
+        "/Users/hunter/Dev/ZombieShooter/MockHandTracking/.build/arm64-apple-macosx/debug/DicyaninMockHandTracking.build/MockHandTrackingController.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/hunter/Dev/ZombieShooter/MockHandTracking/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j12",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/hunter/Dev/ZombieShooter/MockHandTracking/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/hunter/Dev/ZombieShooter/MockHandTracking/.build/arm64-apple-macosx/debug/DicyaninMockHandTracking.build/include/DicyaninMockHandTracking-Swift.h",
+        "-swift-version",
+        "5",
+        "-plugin-path",
+        "/Applications/Xcode 2.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode 2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-F",
+        "/Applications/Xcode 2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode 2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode 2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode 2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode 2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "mockhandtracking"
+      ],
+      "outputFileMapPath" : "/Users/hunter/Dev/ZombieShooter/MockHandTracking/.build/arm64-apple-macosx/debug/DicyaninMockHandTracking.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/hunter/Dev/ZombieShooter/MockHandTracking/.build/arm64-apple-macosx/debug/DicyaninMockHandTracking.build/MockHandControlView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/hunter/Dev/ZombieShooter/MockHandTracking/.build/arm64-apple-macosx/debug/DicyaninMockHandTracking.build/MockHandTrackingController.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/hunter/Dev/ZombieShooter/MockHandTracking/.build/arm64-apple-macosx/debug/Modules/DicyaninMockHandTracking.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/hunter/Dev/ZombieShooter/MockHandTracking/Sources/DicyaninMockHandTracking/MockHandControlView.swift",
+        "/Users/hunter/Dev/ZombieShooter/MockHandTracking/Sources/DicyaninMockHandTracking/MockHandTrackingController.swift"
+      ],
+      "tempsPath" : "/Users/hunter/Dev/ZombieShooter/MockHandTracking/.build/arm64-apple-macosx/debug/DicyaninMockHandTracking.build",
+      "wholeModuleOptimization" : false
+    }
+  },
+  "swiftFrontendCommands" : {
+
+  },
+  "swiftTargetScanArgs" : {
+    "DicyaninMockHandTracking" : [
+      "/Applications/Xcode 2.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "DicyaninMockHandTracking",
+      "-package-name",
+      "mockhandtracking",
+      "-c",
+      "/Users/hunter/Dev/ZombieShooter/MockHandTracking/Sources/DicyaninMockHandTracking/MockHandControlView.swift",
+      "/Users/hunter/Dev/ZombieShooter/MockHandTracking/Sources/DicyaninMockHandTracking/MockHandTrackingController.swift",
+      "-I",
+      "/Users/hunter/Dev/ZombieShooter/MockHandTracking/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/hunter/Dev/ZombieShooter/MockHandTracking/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j12",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/hunter/Dev/ZombieShooter/MockHandTracking/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/hunter/Dev/ZombieShooter/MockHandTracking/.build/arm64-apple-macosx/debug/DicyaninMockHandTracking.build/include/DicyaninMockHandTracking-Swift.h",
+      "-swift-version",
+      "5",
+      "-plugin-path",
+      "/Applications/Xcode 2.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode 2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-F",
+      "/Applications/Xcode 2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode 2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode 2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode 2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode 2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "mockhandtracking",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode 2.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ]
+  },
+  "targetDependencyMap" : {
+    "DicyaninMockHandTracking" : [
+
+    ]
+  },
+  "testDiscoveryCommands" : {
+
+  },
+  "testEntryPointCommands" : {
+
+  },
+  "traitConfiguration" : {
+    "default" : {
+
+    }
+  },
+  "writeCommands" : {
+    "/Users/hunter/Dev/ZombieShooter/MockHandTracking/.build/arm64-apple-macosx/debug/DicyaninMockHandTracking.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/hunter/Dev/ZombieShooter/MockHandTracking/Sources/DicyaninMockHandTracking/MockHandControlView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/hunter/Dev/ZombieShooter/MockHandTracking/Sources/DicyaninMockHandTracking/MockHandTrackingController.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/hunter/Dev/ZombieShooter/MockHandTracking/.build/arm64-apple-macosx/debug/DicyaninMockHandTracking.build/sources"
+    },
+    "/Users/hunter/Dev/ZombieShooter/MockHandTracking/.build/arm64-apple-macosx/debug/swift-version-BF9FFD6CEA9A4E.txt" : {
+      "alwaysOutOfDate" : true,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<swift-get-version>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/Xcode 2.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+        }
+      ],
+      "outputFilePath" : "/Users/hunter/Dev/ZombieShooter/MockHandTracking/.build/arm64-apple-macosx/debug/swift-version-BF9FFD6CEA9A4E.txt"
+    }
+  }
+}
