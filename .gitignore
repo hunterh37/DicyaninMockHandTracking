@@ -2,3 +2,7 @@
 /build/
 .swiftpm/xcode/
 *.xcodeproj
+
+# Screenshot tool build artifacts
+Tools/ScreenshotApp/.build/
+Tools/ScreenshotApp/Sources/ScreenshotApp/Lib/

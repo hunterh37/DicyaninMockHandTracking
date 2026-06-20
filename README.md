@@ -2,6 +2,10 @@
 
 Simulated hand tracking for visionOS. Drives mock hand positions and pinch gestures so hand-tracked apps can be developed and tested in the visionOS simulator, where ARKit hand tracking isn't available.
 
+| Resting | Aiming + pinch |
+| --- | --- |
+| ![Control panel](Screenshots/control-panel.png) | ![Control panel, active](Screenshots/control-panel-active.png) |
+
 ## Install
 
 ```swift
@@ -48,3 +52,13 @@ MockHandControlView()
 
 - visionOS 1.0+
 - Swift 5.9+
+
+## Regenerating README screenshots
+
+The images above are rendered from the SwiftUI control views by a small macOS tool (no simulator or screen-recording permission needed):
+
+```bash
+Tools/ScreenshotApp/generate.sh
+```
+
+Output PNGs land in `Screenshots/`.
