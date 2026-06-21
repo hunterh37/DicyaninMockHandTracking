@@ -1,8 +1,16 @@
 .DS_Store
 /build/
 .swiftpm/xcode/
-*.xcodeproj
+
+# Auto-generated package xcodeproj at the repo root (SPM/Xcode regenerates it).
+/*.xcodeproj
 
 # Screenshot tool build artifacts
 Tools/ScreenshotApp/.build/
 Tools/ScreenshotApp/Sources/ScreenshotApp/Lib/
+
+# Example app: commit project.yml + the generated project, but not local cruft.
+Examples/**/.build/
+Examples/**/xcuserdata/
+Examples/**/*.xcworkspace/xcuserdata/
+Examples/**/DerivedData/

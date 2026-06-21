@@ -110,6 +110,22 @@ MockHandControlView()
 #endif
 ```
 
+## Example app
+
+A complete, runnable visionOS example lives in [`Examples/HandTrackingDemo`](Examples/HandTrackingDemo). It opens an immersive space with a **green sphere that follows the mock right hand** — drag the right-hand joystick in `MockHandControlView` and the sphere moves with it. It uses the same `HandSource` abstraction shown above, so the code path is identical on a real device.
+
+The project is defined with [XcodeGen](https://github.com/yonaskolb/XcodeGen) (`project.yml`) and the generated `.xcodeproj` is checked in, so you can either open it directly or regenerate it:
+
+```bash
+# Just open it
+open Examples/HandTrackingDemo/HandTrackingDemo.xcodeproj
+
+# …or regenerate the project from project.yml
+cd Examples/HandTrackingDemo && xcodegen generate
+```
+
+Then run the `HandTrackingDemo` scheme on a visionOS simulator, tap **Open Immersive Scene**, and steer the right-hand joystick.
+
 ## Requirements
 
 - visionOS 1.0+
@@ -124,3 +140,7 @@ Tools/ScreenshotApp/generate.sh
 ```
 
 Output PNGs land in `Screenshots/`. Requires Screen Recording permission for your terminal (System Settings → Privacy & Security → Screen Recording).
+
+## License
+
+MIT — see [LICENSE](LICENSE).
