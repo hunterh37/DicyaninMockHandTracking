@@ -2,6 +2,13 @@ import Foundation
 import simd
 import Combine
 
+/// A snapshot of both simulated hands at one instant.
+public struct MockHandSnapshot: Sendable, Equatable {
+    public var leftHandPosition: SIMD3<Float>
+    public var rightHandPosition: SIMD3<Float>
+    public var isPinching: Bool
+}
+
 /// Singleton that drives simulated hand positions for the visionOS simulator.
 /// The HandGestureModel / HandTracker read from this in simulator builds instead of ARKit.
 @MainActor
@@ -36,13 +43,23 @@ public final class MockHandTrackingController: ObservableObject {
         }
     }
 
-    /// 60 fps tick stream consumed by HandTracker in simulator builds.
-    public func updates() -> AsyncStream<Void> {
+    /// Stream of hand snapshots, emitted whenever the operator moves a joystick,
+    /// adjusts a slider, or fires a pinch — driven by the controller's
+    /// `@Published` state, not a timer. The current snapshot is delivered on
+    /// subscribe, so consumers always start with a valid value.
+    public func updates() -> AsyncStream<MockHandSnapshot> {
         AsyncStream { continuation in
-            let timer = Timer.scheduledTimer(withTimeInterval: 1.0 / 60.0, repeats: true) { _ in
-                continuation.yield()
+            let task = Task { @MainActor in
+                let stream = $leftHandPosition
+                    .combineLatest($rightHandPosition, $isPinching)
+                    .map { MockHandSnapshot(leftHandPosition: $0, rightHandPosition: $1, isPinching: $2) }
+                    .values
+                for await snapshot in stream {
+                    continuation.yield(snapshot)
+                }
+                continuation.finish()
             }
-            continuation.onTermination = { _ in timer.invalidate() }
+            continuation.onTermination = { _ in task.cancel() }
         }
     }
 }
