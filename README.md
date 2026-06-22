@@ -144,3 +144,27 @@ Output PNGs land in `Screenshots/`. Requires Screen Recording permission for you
 ## License
 
 MIT — see [LICENSE](LICENSE).
+
+---
+
+## 🚀 Built With These Packages
+
+We ship these packages for free, and run them in our own published visionOS apps on the App Store:
+
+### [CYBERZOMBIES](https://apps.apple.com/us/app/id6770111930): powered by [DicyaninHandTracking](https://github.com/hunterh37/DicyaninHandTracking)
+
+<img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/8f/4c/5a/8f4c5add-c887-4803-62f5-36fe134c4df5/AppIcon.lsr/512x512bb.jpg" width="100" />
+
+Room-scale spatial combat where you raise your hands, lock on, and blast waves of cyber-infected enemies that spill out of your own walls, built on hand-driven aiming and `DicyaninARKitSession`.
+
+### [RealityMesh](https://apps.apple.com/us/app/id6474943391): powered by [DicyaninSceneReconstruction](https://github.com/hunterh37/DicyaninSceneReconstruction)
+
+<img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/1e/b8/9b/1eb89b71-5d0b-f11f-cc22-ac723c722f98/AppIcon.lsr/512x512bb.jpg" width="100" />
+
+Uses ARKit and the LiDAR Scanner to build a live mesh of your surroundings, then reskins your real room with customizable textures.
+
+### [Spatial Model Viewer](https://apps.apple.com/us/app/id6475698595): powered by [DicyaninAssetPreloader](https://github.com/hunterh37/DicyaninAssetPreloader)
+
+<img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/a4/ca/3c/a4ca3c52-1768-d6fa-2f2b-4bd37dcde49c/AppIcon.lsr/512x512bb.jpg" width="100" />
+
+Turns your space into a 3D modeling studio with glow and procedural shader effects, loading and cloning models on demand without parsing from disk on the main thread.
