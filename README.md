@@ -131,16 +131,6 @@ Then run the `HandTrackingDemo` scheme on a visionOS simulator, tap **Open Immer
 - visionOS 1.0+
 - Swift 5.9+
 
-## Regenerating README screenshots
-
-The images above are captured from the real SwiftUI control views by a small macOS tool. It launches a live window and captures it through the WindowServer (via `screencapture`), so materials, blur, and control tints render exactly as on screen:
-
-```bash
-Tools/ScreenshotApp/generate.sh
-```
-
-Output PNGs land in `Screenshots/`. Requires Screen Recording permission for your terminal (System Settings → Privacy & Security → Screen Recording).
-
 ## License
 
 MIT — see [LICENSE](LICENSE).
