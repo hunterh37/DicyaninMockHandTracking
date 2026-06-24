@@ -13,7 +13,7 @@ struct ContentView: View {
             VStack(spacing: 8) {
                 Text("Mock Hand Tracking Demo")
                     .font(.largeTitle.bold())
-                Text("Open the immersive scene, then drag the RIGHT HAND joystick. The green sphere follows the mock hand position.")
+                Text("Open the immersive scene, then drag the hand joysticks. A glove follows each mock hand — on device the same view follows your real hands joint-for-joint.")
                     .font(.callout)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)

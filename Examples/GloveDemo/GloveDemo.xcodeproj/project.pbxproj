@@ -7,68 +7,65 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		76610633085EC8EE2871DC50 /* HandSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C077E08BE43A6C11BA805D8C /* HandSource.swift */; };
-		7A9A19D673326BDAA32B6AAC /* ImmersiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A3463F3A36CD722787FB07 /* ImmersiveView.swift */; };
-		7D53C02B5731C4053BFB43DA /* HandTrackingDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CDB46F15164AC41E73A459 /* HandTrackingDemoApp.swift */; };
-		AFE80B58CBC81646DFFF8AD6 /* DicyaninMockHandTracking in Frameworks */ = {isa = PBXBuildFile; productRef = 11A3A1466499449274328F69 /* DicyaninMockHandTracking */; };
-		C870ADDBAF311568F3C3D01E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BBB58523968FD2BA0E45AD5 /* ContentView.swift */; };
-		CEC64BC754F08264A534473C /* DicyaninHandGlove in Frameworks */ = {isa = PBXBuildFile; productRef = 04B5FBF506C053836B23E24E /* DicyaninHandGlove */; };
+		096D736CA8956CA794233A41 /* DicyaninMockHandTracking in Frameworks */ = {isa = PBXBuildFile; productRef = C0CAF6DE10D144A28BA6A1E9 /* DicyaninMockHandTracking */; };
+		21800B6D59CFC383B94B5874 /* DicyaninHandGlove in Frameworks */ = {isa = PBXBuildFile; productRef = 22849964D2DDC9B669A82960 /* DicyaninHandGlove */; };
+		3E55767EBC88A28433060BB6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E99A98E641A75F88E49C47E /* ContentView.swift */; };
+		98E8CA6882C746D2478F56FE /* ImmersiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C17B8AF70E544230482446 /* ImmersiveView.swift */; };
+		F4B8E261C4BB5A108F7BB330 /* GloveDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8983739E9D89A09C5FE8B4A /* GloveDemoApp.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		00A3463F3A36CD722787FB07 /* ImmersiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImmersiveView.swift; sourceTree = "<group>"; };
-		2424B7502C4E68E8EA2081A6 /* DicyaninMockHandTracking */ = {isa = PBXFileReference; lastKnownFileType = folder; name = DicyaninMockHandTracking; path = ../..; sourceTree = SOURCE_ROOT; };
-		9BBB58523968FD2BA0E45AD5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		AC2DDD1070845C20A4182A0C /* HandTrackingDemo.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = HandTrackingDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		C077E08BE43A6C11BA805D8C /* HandSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandSource.swift; sourceTree = "<group>"; };
-		D2CDB46F15164AC41E73A459 /* HandTrackingDemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandTrackingDemoApp.swift; sourceTree = "<group>"; };
+		633C042FA6C90CF7F4521C48 /* DicyaninMockHandTracking */ = {isa = PBXFileReference; lastKnownFileType = folder; name = DicyaninMockHandTracking; path = ../..; sourceTree = SOURCE_ROOT; };
+		7E99A98E641A75F88E49C47E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A2C17B8AF70E544230482446 /* ImmersiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImmersiveView.swift; sourceTree = "<group>"; };
+		B8983739E9D89A09C5FE8B4A /* GloveDemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GloveDemoApp.swift; sourceTree = "<group>"; };
+		C4A1B926A8C60C565CF4C6FF /* GloveDemo.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = GloveDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		0FF888DEFE8BBF9855E6F922 /* Frameworks */ = {
+		46252F62EB9BCBE45D80E45B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AFE80B58CBC81646DFFF8AD6 /* DicyaninMockHandTracking in Frameworks */,
-				CEC64BC754F08264A534473C /* DicyaninHandGlove in Frameworks */,
+				096D736CA8956CA794233A41 /* DicyaninMockHandTracking in Frameworks */,
+				21800B6D59CFC383B94B5874 /* DicyaninHandGlove in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		3B0B0B3C7EB5782AFBF3165D = {
+		1F4E1007A9731246CA4E2549 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
-				85163F700DAE02F59760D909 /* Packages */,
-				CAD1BBE7F7B1E6878975BF9F /* Sources */,
-				3EAF8B73CD9068F1C84B768F /* Products */,
-			);
-			sourceTree = "<group>";
-		};
-		3EAF8B73CD9068F1C84B768F /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				AC2DDD1070845C20A4182A0C /* HandTrackingDemo.app */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		85163F700DAE02F59760D909 /* Packages */ = {
-			isa = PBXGroup;
-			children = (
-				2424B7502C4E68E8EA2081A6 /* DicyaninMockHandTracking */,
+				633C042FA6C90CF7F4521C48 /* DicyaninMockHandTracking */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
 		};
-		CAD1BBE7F7B1E6878975BF9F /* Sources */ = {
+		2E6E8288FF2B3940FF7911EF = {
 			isa = PBXGroup;
 			children = (
-				9BBB58523968FD2BA0E45AD5 /* ContentView.swift */,
-				C077E08BE43A6C11BA805D8C /* HandSource.swift */,
-				D2CDB46F15164AC41E73A459 /* HandTrackingDemoApp.swift */,
-				00A3463F3A36CD722787FB07 /* ImmersiveView.swift */,
+				1F4E1007A9731246CA4E2549 /* Packages */,
+				F1141E9A2E5B2392CF42355F /* Sources */,
+				7FB36917733DDCF2F57125B3 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		7FB36917733DDCF2F57125B3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C4A1B926A8C60C565CF4C6FF /* GloveDemo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F1141E9A2E5B2392CF42355F /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				7E99A98E641A75F88E49C47E /* ContentView.swift */,
+				B8983739E9D89A09C5FE8B4A /* GloveDemoApp.swift */,
+				A2C17B8AF70E544230482446 /* ImmersiveView.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -76,30 +73,30 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		D7BDAFF88536FFF054804929 /* HandTrackingDemo */ = {
+		0C56526881D07C422B8AEE4F /* GloveDemo */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5480DA2FF6E29521FE984D08 /* Build configuration list for PBXNativeTarget "HandTrackingDemo" */;
+			buildConfigurationList = 97DA06B84F3869C5D4EDC4EF /* Build configuration list for PBXNativeTarget "GloveDemo" */;
 			buildPhases = (
-				F0C9E6B8DAD44EA16B1FA10D /* Sources */,
-				0FF888DEFE8BBF9855E6F922 /* Frameworks */,
+				6BDF96C4BCCDE8FE39AA6363 /* Sources */,
+				46252F62EB9BCBE45D80E45B /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = HandTrackingDemo;
+			name = GloveDemo;
 			packageProductDependencies = (
-				11A3A1466499449274328F69 /* DicyaninMockHandTracking */,
-				04B5FBF506C053836B23E24E /* DicyaninHandGlove */,
+				C0CAF6DE10D144A28BA6A1E9 /* DicyaninMockHandTracking */,
+				22849964D2DDC9B669A82960 /* DicyaninHandGlove */,
 			);
-			productName = HandTrackingDemo;
-			productReference = AC2DDD1070845C20A4182A0C /* HandTrackingDemo.app */;
+			productName = GloveDemo;
+			productReference = C4A1B926A8C60C565CF4C6FF /* GloveDemo.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		25682A3E203CB6053F752E30 /* Project object */ = {
+		B6E66935FF204CF0815A3AF1 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
@@ -107,44 +104,43 @@
 				TargetAttributes = {
 				};
 			};
-			buildConfigurationList = 5999961BD172B7019932A6E8 /* Build configuration list for PBXProject "HandTrackingDemo" */;
+			buildConfigurationList = 3709E766CACE24517B857315 /* Build configuration list for PBXProject "GloveDemo" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				Base,
 				en,
 			);
-			mainGroup = 3B0B0B3C7EB5782AFBF3165D;
+			mainGroup = 2E6E8288FF2B3940FF7911EF;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				EAA36A862730DAD98366F5FB /* XCLocalSwiftPackageReference "../.." */,
+				8BC8286981CA0A78F086BF9F /* XCLocalSwiftPackageReference "../.." */,
 			);
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 3EAF8B73CD9068F1C84B768F /* Products */;
+			productRefGroup = 7FB36917733DDCF2F57125B3 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				D7BDAFF88536FFF054804929 /* HandTrackingDemo */,
+				0C56526881D07C422B8AEE4F /* GloveDemo */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		F0C9E6B8DAD44EA16B1FA10D /* Sources */ = {
+		6BDF96C4BCCDE8FE39AA6363 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C870ADDBAF311568F3C3D01E /* ContentView.swift in Sources */,
-				76610633085EC8EE2871DC50 /* HandSource.swift in Sources */,
-				7D53C02B5731C4053BFB43DA /* HandTrackingDemoApp.swift in Sources */,
-				7A9A19D673326BDAA32B6AAC /* ImmersiveView.swift in Sources */,
+				3E55767EBC88A28433060BB6 /* ContentView.swift in Sources */,
+				F4B8E261C4BB5A108F7BB330 /* GloveDemoApp.swift in Sources */,
+				98E8CA6882C746D2478F56FE /* ImmersiveView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		030C04400D86E2BA473D6D76 /* Release */ = {
+		1A8E298508B65B7C8922A4BA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -155,14 +151,14 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.dicyanin.handtrackingdemo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dicyanin.glovedemo;
 				SDKROOT = xros;
 				SWIFT_VERSION = 5.9;
 				TARGETED_DEVICE_FAMILY = 7;
 			};
-			name = Release;
+			name = Debug;
 		};
-		4EB47035D70081CB70803E0F /* Release */ = {
+		1F695C4B30C524EA3ADB2C27 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -218,25 +214,7 @@
 			};
 			name = Release;
 		};
-		636923E2A710F0E3124DAAA7 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGNING_ALLOWED = NO;
-				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = Generated/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.dicyanin.handtrackingdemo;
-				SDKROOT = xros;
-				SWIFT_VERSION = 5.9;
-				TARGETED_DEVICE_FAMILY = 7;
-			};
-			name = Debug;
-		};
-		7AECE4AF81B33E66146D46C7 /* Debug */ = {
+		3F8D324765126DDC9849EA64 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -299,23 +277,41 @@
 			};
 			name = Debug;
 		};
+		7E6F71B5F3498992CBA7B649 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGNING_ALLOWED = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Generated/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.dicyanin.glovedemo;
+				SDKROOT = xros;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = 7;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		5480DA2FF6E29521FE984D08 /* Build configuration list for PBXNativeTarget "HandTrackingDemo" */ = {
+		3709E766CACE24517B857315 /* Build configuration list for PBXProject "GloveDemo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				636923E2A710F0E3124DAAA7 /* Debug */,
-				030C04400D86E2BA473D6D76 /* Release */,
+				3F8D324765126DDC9849EA64 /* Debug */,
+				1F695C4B30C524EA3ADB2C27 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		5999961BD172B7019932A6E8 /* Build configuration list for PBXProject "HandTrackingDemo" */ = {
+		97DA06B84F3869C5D4EDC4EF /* Build configuration list for PBXNativeTarget "GloveDemo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				7AECE4AF81B33E66146D46C7 /* Debug */,
-				4EB47035D70081CB70803E0F /* Release */,
+				1A8E298508B65B7C8922A4BA /* Debug */,
+				7E6F71B5F3498992CBA7B649 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -323,22 +319,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		EAA36A862730DAD98366F5FB /* XCLocalSwiftPackageReference "../.." */ = {
+		8BC8286981CA0A78F086BF9F /* XCLocalSwiftPackageReference "../.." */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../..;
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		04B5FBF506C053836B23E24E /* DicyaninHandGlove */ = {
+		22849964D2DDC9B669A82960 /* DicyaninHandGlove */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DicyaninHandGlove;
 		};
-		11A3A1466499449274328F69 /* DicyaninMockHandTracking */ = {
+		C0CAF6DE10D144A28BA6A1E9 /* DicyaninMockHandTracking */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DicyaninMockHandTracking;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
-	rootObject = 25682A3E203CB6053F752E30 /* Project object */;
+	rootObject = B6E66935FF204CF0815A3AF1 /* Project object */;
 }

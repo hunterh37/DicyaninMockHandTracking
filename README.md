@@ -16,12 +16,13 @@ The idea: write your app against one hand-pose source. In the **simulator** it r
 .package(url: "https://github.com/hunterh37/DicyaninMockHandTracking.git", from: "3.0.0")
 ```
 
-Two products ship from this package:
+Three products ship from this package:
 
 - `DicyaninMockHandTracking` — the visionOS mock controller + control overlay (add this to your app target).
 - `DicyaninHandTrackingTransport` — a small, cross-platform (visionOS + macOS) networking layer that carries hand poses between processes. The webcam runner uses it; your app only needs it if you call the transport types directly.
+- `DicyaninHandGlove` — a rigged **glove** that maps every hand-skeleton joint, built directly on Apple's [_Tracking and visualizing hand movement_](https://developer.apple.com/documentation/visionos/tracking-and-visualizing-hand-movement) sample. One view follows your real hands on device and the mock controller in the simulator. See [Glove hands](#glove-hands).
 
-Then add `DicyaninMockHandTracking` to your target's dependencies.
+Then add `DicyaninMockHandTracking` (and `DicyaninHandGlove` if you want gloves) to your target's dependencies.
 
 ## Usage
 
@@ -179,9 +180,51 @@ Call `disconnectWebcamRunner()` to hand control back to the on-screen joysticks.
 > size and yaw from the wrist→knuckle direction. It's built for fast iteration
 > in the simulator, not metric precision — ship against ARKit on device.
 
+## Glove hands
+
+`DicyaninHandGlove` re-implements Apple's [_Tracking and visualizing hand movement_](https://developer.apple.com/documentation/visionos/tracking-and-visualizing-hand-movement) sample as a single drop-in view. Apple's sample is a `HandTrackingComponent` + `HandTrackingSystem` that maps all 27 hand-skeleton joints to entities every frame (`originFromAnchorTransform * anchorFromJointTransform`); this package vendors that engine faithfully and adds a filled-glove look, a slot for a rigged glove USDZ, and a **simulator bridge** so the glove follows `MockHandTrackingController` when ARKit hand tracking isn't available.
+
+Re-implementing the glove sample is now one view:
+
+```swift
+import DicyaninHandGlove
+
+ImmersiveSpace(id: "Gloves") {
+    HandGloveView()
+}
+```
+
+That's the whole integration. On device the gloves follow the real hand skeleton joint-for-joint; in the simulator they follow the joysticks / webcam bridge — same code path.
+
+Tune the look, or drop in your own rigged glove model:
+
+```swift
+// Apple's original spheres-only look
+HandGloveView(configuration: .init(style: .joints))
+
+// Right hand only, custom color
+HandGloveView(configuration: .init(
+    tracksLeftHand: false,
+    color: .orange
+))
+
+// Your own rigged glove USDZ, added to the app bundle.
+// (Apple's keynote "RightGlove_v001.usdz" was never shipped publicly — supply
+//  your own export, or any glove mesh, here.)
+HandGloveView(configuration: .init(
+    style: .model(left: "LeftGlove_v001", right: "RightGlove_v001")
+))
+```
+
+> Apple's hand-tracking sample renders joints as plain spheres and ships no glove
+> asset — the `RightGlove_v001.usdz` shown in WWDC23's _Go beyond the window with
+> SwiftUI_ was a keynote demo asset, not a downloadable file. `.glove` gives you a
+> filled, articulated glove with no asset; `.model(left:right:)` is the slot to
+> load a real rigged USDZ when you have one.
+
 ## Example app
 
-A complete, runnable visionOS example lives in [`Examples/HandTrackingDemo`](Examples/HandTrackingDemo). It opens an immersive space with a **green sphere that follows the mock right hand** — drag the right-hand joystick in `MockHandControlView` and the sphere moves with it. It uses the same `HandSource` abstraction shown above, so the code path is identical on a real device.
+A complete, runnable visionOS example lives in [`Examples/HandTrackingDemo`](Examples/HandTrackingDemo). It opens an immersive space with a **glove on each hand** (`HandGloveView`) — drag the joysticks in `MockHandControlView` and the gloves move with them. On a real device the same view follows your actual hands joint-for-joint.
 
 The project is defined with [XcodeGen](https://github.com/yonaskolb/XcodeGen) (`project.yml`) and the generated `.xcodeproj` is checked in, so you can either open it directly or regenerate it:
 
@@ -193,7 +236,7 @@ open Examples/HandTrackingDemo/HandTrackingDemo.xcodeproj
 cd Examples/HandTrackingDemo && xcodegen generate
 ```
 
-Then run the `HandTrackingDemo` scheme on a visionOS simulator, tap **Open Immersive Scene**, and steer the right-hand joystick.
+Then run the `HandTrackingDemo` scheme on a visionOS simulator, tap **Open Immersive Scene**, and steer the joysticks to move the gloves.
 
 ## Requirements
 

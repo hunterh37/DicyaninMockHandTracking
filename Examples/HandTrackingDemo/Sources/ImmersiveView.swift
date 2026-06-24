@@ -1,33 +1,23 @@
 import SwiftUI
 import RealityKit
+import DicyaninHandGlove
 
-/// Immersive scene with a single green sphere that tracks the right hand.
+/// Immersive scene that renders a glove on each hand, built on Apple's
+/// "Tracking and visualizing hand movement" sample.
 ///
-/// We keep a reference to the sphere entity and mutate its `position` directly
-/// from `HandSource`'s pose stream — no scene rebuilds. In the simulator it
-/// moves with the `MockHandControlView` joystick; on device the same code path
-/// follows the real hand, with no change to this view.
+/// This is the whole integration: one view. In the simulator the gloves follow
+/// the `MockHandControlView` joysticks (or the webcam bridge); on device the
+/// same code path follows the real ARKit hand skeleton, joint for joint.
+///
+/// To use a rigged glove USDZ instead of the procedural glove, add the model to
+/// the app bundle and pass `.model(left:right:)`:
+/// ```swift
+/// HandGloveView(configuration: .init(
+///     style: .model(left: "LeftGlove_v001", right: "RightGlove_v001")
+/// ))
+/// ```
 struct ImmersiveView: View {
-    private let handSource = HandSource()
-    @State private var sphere = ModelEntity(
-        mesh: .generateSphere(radius: 0.05),
-        materials: [SimpleMaterial(color: .green, isMetallic: false)]
-    )
-
     var body: some View {
-        RealityView { content in
-            content.add(sphere)
-        }
-        .task {
-            do {
-                try await handSource.start()
-            } catch {
-                print("HandSource failed to start: \(error)")
-                return
-            }
-            for await pose in handSource.poses() {
-                sphere.position = pose.position
-            }
-        }
+        HandGloveView()
     }
 }
