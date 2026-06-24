@@ -1,17 +1,16 @@
-name: HandTrackingDemo
+name: GloveDemo
 options:
-  bundleIdPrefix: com.dicyanin.handtrackingdemo
+  bundleIdPrefix: com.dicyanin.glovedemo
   deploymentTarget:
     visionOS: "1.0"
   createIntermediateGroups: true
 
 packages:
   DicyaninMockHandTracking:
-    # Local path to the package this example demonstrates.
     path: ../..
 
 targets:
-  HandTrackingDemo:
+  GloveDemo:
     type: application
     platform: visionOS
     sources:
@@ -24,14 +23,14 @@ targets:
     info:
       path: Generated/Info.plist
       properties:
-        CFBundleDisplayName: Hand Demo
+        CFBundleDisplayName: Glove Demo
         UIApplicationSceneManifest:
           UIApplicationPreferredDefaultSceneSessionRole: UIWindowSceneSessionRoleApplication
           UISceneConfigurations: {}
         UILaunchScreen: {}
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.dicyanin.handtrackingdemo
+        PRODUCT_BUNDLE_IDENTIFIER: com.dicyanin.glovedemo
         GENERATE_INFOPLIST_FILE: NO
         TARGETED_DEVICE_FAMILY: "7"
         SWIFT_VERSION: "5.9"

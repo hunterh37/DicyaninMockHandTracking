@@ -14,3 +14,6 @@ Examples/**/.build/
 Examples/**/xcuserdata/
 Examples/**/*.xcworkspace/xcuserdata/
 Examples/**/DerivedData/
+
+# SPM build artifacts (root)
+/.build/

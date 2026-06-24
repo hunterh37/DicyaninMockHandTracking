@@ -1,0 +1,345 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		157FA93EC8BE186E7619A534 /* CameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 075DB8C395FC02B7B6A17EFA /* CameraPreview.swift */; };
+		76B2BE92FA8F33B52BD794BE /* HandRunnerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3917D239169A7136508D634E /* HandRunnerModel.swift */; };
+		7A99AAADB7B8EE8CB2D75841 /* WebcamHandRunnerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43420EC4D442056DCF03017C /* WebcamHandRunnerApp.swift */; };
+		A8607B20A789A6FF4FEDDCD4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10F0970706868E91B2C8828 /* ContentView.swift */; };
+		C323AC45E5C96D34F1D79034 /* HandVisionPipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5062B61A6E1E2EAEF8F3E406 /* HandVisionPipeline.swift */; };
+		F8BFB87381EEE98CD2F4E993 /* DicyaninHandTrackingTransport in Frameworks */ = {isa = PBXBuildFile; productRef = 068D45987F5572E9EE353C4E /* DicyaninHandTrackingTransport */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		075DB8C395FC02B7B6A17EFA /* CameraPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreview.swift; sourceTree = "<group>"; };
+		0C407F0C6C450ADC1F64CB75 /* WebcamHandRunner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WebcamHandRunner.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3917D239169A7136508D634E /* HandRunnerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandRunnerModel.swift; sourceTree = "<group>"; };
+		43420EC4D442056DCF03017C /* WebcamHandRunnerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebcamHandRunnerApp.swift; sourceTree = "<group>"; };
+		5062B61A6E1E2EAEF8F3E406 /* HandVisionPipeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandVisionPipeline.swift; sourceTree = "<group>"; };
+		830219A36A721FC8B3671288 /* DicyaninMockHandTracking */ = {isa = PBXFileReference; lastKnownFileType = folder; name = DicyaninMockHandTracking; path = ../..; sourceTree = SOURCE_ROOT; };
+		B10F0970706868E91B2C8828 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E623A05F2B2C17C0574E16FD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F8BFB87381EEE98CD2F4E993 /* DicyaninHandTrackingTransport in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A68C9142F5FB05E8D9997B99 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0C407F0C6C450ADC1F64CB75 /* WebcamHandRunner.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		BED833A6FF4B4C069BD45EC0 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				075DB8C395FC02B7B6A17EFA /* CameraPreview.swift */,
+				B10F0970706868E91B2C8828 /* ContentView.swift */,
+				3917D239169A7136508D634E /* HandRunnerModel.swift */,
+				5062B61A6E1E2EAEF8F3E406 /* HandVisionPipeline.swift */,
+				43420EC4D442056DCF03017C /* WebcamHandRunnerApp.swift */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		CB10460F5AC0B54448E28BA8 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				830219A36A721FC8B3671288 /* DicyaninMockHandTracking */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		F59B6AC0EEAF2F11A6E1DE4E = {
+			isa = PBXGroup;
+			children = (
+				CB10460F5AC0B54448E28BA8 /* Packages */,
+				BED833A6FF4B4C069BD45EC0 /* Sources */,
+				A68C9142F5FB05E8D9997B99 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		DDFE15B9B7F5E8E2C2E80A5D /* WebcamHandRunner */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3A8D24265578EF20AE1572AB /* Build configuration list for PBXNativeTarget "WebcamHandRunner" */;
+			buildPhases = (
+				7BE252711CA2CC3731495005 /* Sources */,
+				E623A05F2B2C17C0574E16FD /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WebcamHandRunner;
+			packageProductDependencies = (
+				068D45987F5572E9EE353C4E /* DicyaninHandTrackingTransport */,
+			);
+			productName = WebcamHandRunner;
+			productReference = 0C407F0C6C450ADC1F64CB75 /* WebcamHandRunner.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		36D5DDE357BA96F5B17DABD9 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = A7FFB46E66E8C96E7E6045E2 /* Build configuration list for PBXProject "WebcamHandRunner" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = F59B6AC0EEAF2F11A6E1DE4E;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				58702F317A342C8AD532E51C /* XCLocalSwiftPackageReference "../.." */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = A68C9142F5FB05E8D9997B99 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				DDFE15B9B7F5E8E2C2E80A5D /* WebcamHandRunner */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		7BE252711CA2CC3731495005 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				157FA93EC8BE186E7619A534 /* CameraPreview.swift in Sources */,
+				A8607B20A789A6FF4FEDDCD4 /* ContentView.swift in Sources */,
+				76B2BE92FA8F33B52BD794BE /* HandRunnerModel.swift in Sources */,
+				C323AC45E5C96D34F1D79034 /* HandVisionPipeline.swift in Sources */,
+				7A99AAADB7B8EE8CB2D75841 /* WebcamHandRunnerApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		09CF7489E1A35467411E332E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGNING_ALLOWED = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Generated/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.dicyanin.webcamhandrunner;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+		5E3004A09D49DDCA1548E011 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		E06AB51090956399A7F2C219 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		F3EC2D445F5D49BD087B9A1B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGNING_ALLOWED = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Generated/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.dicyanin.webcamhandrunner;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3A8D24265578EF20AE1572AB /* Build configuration list for PBXNativeTarget "WebcamHandRunner" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F3EC2D445F5D49BD087B9A1B /* Debug */,
+				09CF7489E1A35467411E332E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		A7FFB46E66E8C96E7E6045E2 /* Build configuration list for PBXProject "WebcamHandRunner" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5E3004A09D49DDCA1548E011 /* Debug */,
+				E06AB51090956399A7F2C219 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		58702F317A342C8AD532E51C /* XCLocalSwiftPackageReference "../.." */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../..;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		068D45987F5572E9EE353C4E /* DicyaninHandTrackingTransport */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DicyaninHandTrackingTransport;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 36D5DDE357BA96F5B17DABD9 /* Project object */;
+}
