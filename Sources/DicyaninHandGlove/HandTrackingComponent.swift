@@ -32,6 +32,10 @@ public struct HandTrackingComponent: Component {
     /// Whether the per-joint entities have been created yet.
     var isBuilt = false
 
+    /// For the rigged-USDZ (`.model`) style: drives the model's skeleton so the
+    /// glove's fingers articulate with the tracked hand.
+    var riggedDriver: RiggedGloveDriver?
+
     /// Creates a new hand-tracking component.
     /// - Parameters:
     ///   - chirality: Which hand to track.

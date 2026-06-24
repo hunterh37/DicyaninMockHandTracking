@@ -152,9 +152,12 @@ public struct HandTrackingSystem: System {
                 : MockHandTrackingController.shared.rightHandJoints
             guard !joints.isEmpty else { return }
 
-            // Rigged-USDZ style has no per-joint entities — anchor the whole model
-            // to the wrist so the glove follows the hand.
+            // Rigged-USDZ style: drive the model's skeleton so fingers articulate.
+            // Falls back to a rigid wrist follow if the model isn't rigged.
             if case .model = hand.configuration.style {
+                if let driver = hand.riggedDriver, driver.pose(world: joints) {
+                    return
+                }
                 if let wrist = joints[.wrist] ?? joints[.forearmWrist] {
                     root.setTransformMatrix(wrist * hand.configuration.modelWristOffset, relativeTo: nil)
                 }
@@ -181,6 +184,9 @@ public struct HandTrackingSystem: System {
             if let model = (try? Entity.loadModel(named: name))
                 ?? (try? Entity.loadModel(named: name, in: .module)) {
                 root.addChild(model)
+                // If the USDZ is rigged, drive its skeleton so the fingers
+                // articulate; otherwise it falls back to following the wrist.
+                hand.riggedDriver = RiggedGloveDriver(root: root, chirality: hand.chirality)
                 return
             }
             print("HandGlove: couldn't load model '\(name)', falling back to procedural glove.")
@@ -226,14 +232,25 @@ public struct HandTrackingSystem: System {
               let skeleton = anchor.handSkeleton
         else { return }
 
-        // Rigged-USDZ style has no per-joint entities — anchor the whole model to
-        // the wrist so the glove follows the hand.
+        // Rigged-USDZ style: drive the model's skeleton from ARKit so fingers
+        // articulate. Falls back to a rigid wrist follow if the model isn't rigged.
         if case .model = hand.configuration.style {
-            let wrist = skeleton.joint(.wrist)
-            let joint = wrist.isTracked ? wrist : skeleton.joint(.forearmWrist)
-            if joint.isTracked {
-                let world = anchor.originFromAnchorTransform * joint.anchorFromJointTransform
-                root.setTransformMatrix(world * hand.configuration.modelWristOffset, relativeTo: nil)
+            var world: [HandSkeleton.JointName: simd_float4x4] = [:]
+            let wristJoint = skeleton.joint(.wrist)
+            if wristJoint.isTracked {
+                world[.wrist] = anchor.originFromAnchorTransform * wristJoint.anchorFromJointTransform
+            }
+            for entry in HandJoints.all {
+                let j = skeleton.joint(entry.name)
+                if j.isTracked {
+                    world[entry.name] = anchor.originFromAnchorTransform * j.anchorFromJointTransform
+                }
+            }
+            if let driver = hand.riggedDriver, driver.pose(world: world) {
+                return
+            }
+            if let wrist = world[.wrist] ?? world[.forearmWrist] {
+                root.setTransformMatrix(wrist * hand.configuration.modelWristOffset, relativeTo: nil)
             }
             return
         }
