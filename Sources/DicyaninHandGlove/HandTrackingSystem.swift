@@ -151,6 +151,16 @@ public struct HandTrackingSystem: System {
                 ? MockHandTrackingController.shared.leftHandJoints
                 : MockHandTrackingController.shared.rightHandJoints
             guard !joints.isEmpty else { return }
+
+            // Rigged-USDZ style has no per-joint entities — anchor the whole model
+            // to the wrist so the glove follows the hand.
+            if case .model = hand.configuration.style {
+                if let wrist = joints[.wrist] ?? joints[.forearmWrist] {
+                    root.setTransformMatrix(wrist * hand.configuration.modelWristOffset, relativeTo: nil)
+                }
+                return
+            }
+
             for (jointName, jointEntity) in hand.joints {
                 guard let m = joints[jointName] else { continue }
                 jointEntity.setTransformMatrix(m, relativeTo: nil)
@@ -215,6 +225,18 @@ public struct HandTrackingSystem: System {
         guard let anchor: HandAnchor = (hand.chirality == .left ? Self.latestLeftHand : Self.latestRightHand),
               let skeleton = anchor.handSkeleton
         else { return }
+
+        // Rigged-USDZ style has no per-joint entities — anchor the whole model to
+        // the wrist so the glove follows the hand.
+        if case .model = hand.configuration.style {
+            let wrist = skeleton.joint(.wrist)
+            let joint = wrist.isTracked ? wrist : skeleton.joint(.forearmWrist)
+            if joint.isTracked {
+                let world = anchor.originFromAnchorTransform * joint.anchorFromJointTransform
+                root.setTransformMatrix(world * hand.configuration.modelWristOffset, relativeTo: nil)
+            }
+            return
+        }
 
         for (jointName, jointEntity) in hand.joints {
             let anchorFromJoint = skeleton.joint(jointName).anchorFromJointTransform

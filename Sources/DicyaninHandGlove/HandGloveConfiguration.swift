@@ -50,6 +50,12 @@ public struct HandGloveConfiguration: Sendable {
     /// Whether the glove material is metallic.
     public var isMetallic: Bool
 
+    /// Local transform applied to a ``HandGloveStyle/model`` glove relative to the
+    /// wrist joint, to align the USDZ's authored orientation/scale with ARKit's
+    /// wrist frame. Defaults to identity; override if your model needs a rotation
+    /// or offset to sit correctly on the hand.
+    public var modelWristOffset: simd_float4x4
+
     public init(
         tracksLeftHand: Bool = true,
         tracksRightHand: Bool = true,
@@ -57,7 +63,8 @@ public struct HandGloveConfiguration: Sendable {
         jointRadius: Float = 0.01,
         boneRadius: Float = 0.008,
         color: Color = Color(red: 0.10, green: 0.12, blue: 0.16),
-        isMetallic: Bool = false
+        isMetallic: Bool = false,
+        modelWristOffset: simd_float4x4 = matrix_identity_float4x4
     ) {
         self.tracksLeftHand = tracksLeftHand
         self.tracksRightHand = tracksRightHand
@@ -66,6 +73,7 @@ public struct HandGloveConfiguration: Sendable {
         self.boneRadius = boneRadius
         self.color = color
         self.isMetallic = isMetallic
+        self.modelWristOffset = modelWristOffset
     }
 
     /// A sensible default: a dark glove on both hands.
