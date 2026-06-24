@@ -52,11 +52,53 @@ public struct HandTrackingSystem: System {
         }
 
         for await update in handTracking.anchorUpdates {
-            switch update.anchor.chirality {
-            case .left: latestLeftHand = update.anchor
-            case .right: latestRightHand = update.anchor
+            let anchor = update.anchor
+            switch anchor.chirality {
+            case .left: latestLeftHand = anchor
+            case .right: latestRightHand = anchor
+            }
+            // Mirror the live hand into the mock controller so the recorder (which
+            // samples the controller's joints) captures full articulation on
+            // device — the same source the simulator records. Playback owns the
+            // joints while it runs, so don't fight it.
+            let controller = MockHandTrackingController.shared
+            if !controller.isPlayingBack {
+                feedControllerFromAnchor(anchor, controller: controller)
             }
         }
+    }
+
+    /// Convert an ARKit hand anchor's skeleton into world-space joint transforms
+    /// and publish them (plus a pinch estimate) into the mock controller.
+    @MainActor
+    private static func feedControllerFromAnchor(_ anchor: HandAnchor, controller: MockHandTrackingController) {
+        guard let skeleton = anchor.handSkeleton else { return }
+        var joints: [HandSkeleton.JointName: simd_float4x4] = [:]
+        joints.reserveCapacity(HandJoints.all.count)
+        for entry in HandJoints.all {
+            let j = skeleton.joint(entry.name)
+            guard j.isTracked else { continue }
+            joints[entry.name] = anchor.originFromAnchorTransform * j.anchorFromJointTransform
+        }
+        let pinching = Self.isPinching(skeleton: skeleton, anchor: anchor)
+        if anchor.chirality == .left {
+            controller.applyJoints(left: joints, isPinching: pinching)
+        } else {
+            controller.applyJoints(right: joints, isPinching: pinching)
+        }
+    }
+
+    /// Thumb-tip to index-tip distance threshold, matching a real pinch.
+    @MainActor
+    private static func isPinching(skeleton: HandSkeleton, anchor: HandAnchor) -> Bool {
+        let thumb = skeleton.joint(.thumbTip)
+        let index = skeleton.joint(.indexFingerTip)
+        guard thumb.isTracked, index.isTracked else { return false }
+        let t = anchor.originFromAnchorTransform * thumb.anchorFromJointTransform
+        let i = anchor.originFromAnchorTransform * index.anchorFromJointTransform
+        let tp = SIMD3<Float>(t.columns.3.x, t.columns.3.y, t.columns.3.z)
+        let ip = SIMD3<Float>(i.columns.3.x, i.columns.3.y, i.columns.3.z)
+        return simd_distance(tp, ip) < 0.025  // 2.5 cm
     }
 
     /// Finds every entity with a hand-tracking component.
@@ -77,10 +119,35 @@ public struct HandTrackingSystem: System {
             #if targetEnvironment(simulator)
             driveFromMock(hand, root: entity)
             #else
-            driveFromARKit(hand, root: entity)
+            // During replay the recording owns the controller's joints; render
+            // those so the captured motion plays back on device. Otherwise follow
+            // live ARKit.
+            if MockHandTrackingController.shared.isPlayingBack {
+                driveFromControllerJoints(hand, root: entity)
+            } else {
+                driveFromARKit(hand, root: entity)
+            }
             #endif
         }
     }
+
+    #if !targetEnvironment(simulator)
+    /// Render glove joints from the mock controller's published world-space joint
+    /// transforms (used on device while a recording is replaying).
+    private func driveFromControllerJoints(_ hand: HandTrackingComponent, root: Entity) {
+        MainActor.assumeIsolated {
+            let joints = (hand.chirality == .left)
+                ? MockHandTrackingController.shared.leftHandJoints
+                : MockHandTrackingController.shared.rightHandJoints
+            guard !joints.isEmpty else { return }
+            for (jointName, jointEntity) in hand.joints {
+                guard let m = joints[jointName] else { continue }
+                jointEntity.setTransformMatrix(m, relativeTo: nil)
+            }
+            updateBones(hand, worldSpace: true)
+        }
+    }
+    #endif
 
     // MARK: - Building the glove
 

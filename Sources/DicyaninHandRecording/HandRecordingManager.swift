@@ -84,9 +84,7 @@ public final class HandRecordingManager: ObservableObject {
             while !Task.isCancelled {
                 guard let self, let start = self.recordStart else { break }
                 let t = Date().timeIntervalSince(start)
-                self.capturedFrames.append(
-                    HandRecordingFrame(time: t, packet: self.snapshotPacket())
-                )
+                self.capturedFrames.append(self.snapshotFrame(at: t))
                 self.elapsed = t
                 try? await Task.sleep(for: .seconds(interval))
             }
@@ -129,6 +127,23 @@ public final class HandRecordingManager: ObservableObject {
         )
     }
 
+    /// Captures one frame: the coarse packet always, plus full articulated joint
+    /// transforms on visionOS (live ARKit on device, rest pose in the simulator).
+    private func snapshotFrame(at t: TimeInterval) -> HandRecordingFrame {
+        #if os(visionOS)
+        let left = controller.leftHandJoints
+        let right = controller.rightHandJoints
+        return HandRecordingFrame(
+            time: t,
+            packet: snapshotPacket(),
+            leftJoints: left.isEmpty ? nil : JointSerialization.serialize(left),
+            rightJoints: right.isEmpty ? nil : JointSerialization.serialize(right)
+        )
+        #else
+        return HandRecordingFrame(time: t, packet: snapshotPacket())
+        #endif
+    }
+
     // MARK: - Playback
 
     /// Replays a session by feeding its frames back into the mock controller at
@@ -143,6 +158,10 @@ public final class HandRecordingManager: ObservableObject {
         mode = .playing
         elapsed = 0
 
+        // Take ownership of the controller's joints so the device ARKit feed
+        // stops overwriting them while we replay.
+        controller.setPlayingBack(true)
+
         playbackTask = Task { @MainActor [weak self] in
             repeat {
                 let start = Date()
@@ -151,12 +170,29 @@ public final class HandRecordingManager: ObservableObject {
                     let wait = frame.time - Date().timeIntervalSince(start)
                     if wait > 0 { try? await Task.sleep(for: .seconds(wait)) }
                     if Task.isCancelled { break }
-                    self?.controller.apply(frame.packet)
+                    self?.applyFrame(frame)
                     self?.elapsed = frame.time
                 }
             } while loop && !Task.isCancelled
+            self?.controller.setPlayingBack(false)
             self?.mode = .idle
         }
+    }
+
+    /// Drives one frame into the controller: full articulated joints when the
+    /// frame carries them, otherwise the coarse packet.
+    private func applyFrame(_ frame: HandRecordingFrame) {
+        #if os(visionOS)
+        if frame.hasJoints {
+            controller.applyJoints(
+                left: frame.leftJoints.map(JointSerialization.deserialize),
+                right: frame.rightJoints.map(JointSerialization.deserialize),
+                isPinching: frame.packet.isPinching
+            )
+            return
+        }
+        #endif
+        controller.apply(frame.packet)
     }
 
     /// Replays a saved session by id. Returns `false` if no such session exists.
@@ -171,6 +207,7 @@ public final class HandRecordingManager: ObservableObject {
     public func stopPlayback() {
         playbackTask?.cancel()
         playbackTask = nil
+        controller.setPlayingBack(false)
         if mode == .playing { mode = .idle }
     }
 

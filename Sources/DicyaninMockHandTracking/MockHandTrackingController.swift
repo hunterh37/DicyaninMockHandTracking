@@ -54,6 +54,12 @@ public final class MockHandTrackingController: ObservableObject {
 
     private var pinchTask: Task<Void, Never>?
 
+    /// True while a recording is being replayed into this controller. While set,
+    /// the device ARKit feed stops overwriting the joints so playback owns them.
+    /// Read by `HandTrackingSystem` to decide whether to render from live ARKit
+    /// or from the joints being applied by the recording manager.
+    @Published public private(set) var isPlayingBack: Bool = false
+
     /// True while a live webcam runner is feeding this controller. When set,
     /// on-screen `MockHandControlView` joysticks should be treated as read-only
     /// (the network is the source of truth).
@@ -117,6 +123,35 @@ public final class MockHandTrackingController: ObservableObject {
             }
             continuation.onTermination = { _ in task.cancel() }
         }
+    }
+
+    // MARK: - Full-joint feed (device ARKit / recording playback)
+
+    #if os(visionOS)
+    /// Publish externally-sourced world-space joint transforms for one or both
+    /// hands. This is the single seam the device ARKit feed and the recording
+    /// player both write through, so the glove (which reads `leftHandJoints` /
+    /// `rightHandJoints`) and the recorder (which samples them) stay in sync on
+    /// device exactly the way they already do in the simulator.
+    ///
+    /// Unlike `apply(_:)`, this does not touch `leftHandPosition` / `…Yaw`, so it
+    /// won't trigger the rest-pose recompute — the supplied joints are authored
+    /// directly, preserving full finger articulation.
+    public func applyJoints(
+        left: [HandSkeleton.JointName: simd_float4x4]? = nil,
+        right: [HandSkeleton.JointName: simd_float4x4]? = nil,
+        isPinching: Bool? = nil
+    ) {
+        if let left { leftHandJoints = left }
+        if let right { rightHandJoints = right }
+        if let isPinching { self.isPinching = isPinching }
+    }
+    #endif
+
+    /// Toggle the playback flag. Called by the recording manager around replay so
+    /// the device ARKit feed yields ownership of the joints to the recording.
+    public func setPlayingBack(_ active: Bool) {
+        isPlayingBack = active
     }
 
     // MARK: - Live webcam bridge

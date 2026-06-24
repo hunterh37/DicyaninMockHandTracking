@@ -6,13 +6,31 @@ import DicyaninHandTrackingTransport
 public struct HandRecordingFrame: Codable, Sendable, Equatable {
     /// Seconds since the recording began.
     public var time: TimeInterval
-    /// The hand pose captured at ``time``.
+    /// The coarse hand pose (position + yaw + pinch) captured at ``time``. Always
+    /// present, so old consumers and the webcam wire format keep working.
     public var packet: HandPosePacket
 
-    public init(time: TimeInterval, packet: HandPosePacket) {
+    /// Optional full per-joint world transforms, keyed by stable joint name with
+    /// 16 column-major floats each. Present when captured from live ARKit (device)
+    /// or the simulator's articulated rest pose. When present, playback uses these
+    /// for full finger articulation; when absent it falls back to ``packet``.
+    public var leftJoints: [String: [Float]]?
+    public var rightJoints: [String: [Float]]?
+
+    public init(
+        time: TimeInterval,
+        packet: HandPosePacket,
+        leftJoints: [String: [Float]]? = nil,
+        rightJoints: [String: [Float]]? = nil
+    ) {
         self.time = time
         self.packet = packet
+        self.leftJoints = leftJoints
+        self.rightJoints = rightJoints
     }
+
+    /// True when this frame carries full articulated joints.
+    public var hasJoints: Bool { leftJoints != nil || rightJoints != nil }
 }
 
 /// A complete, replayable capture of both hands over time.
