@@ -32,9 +32,20 @@ public struct HandTrackingSystem: System {
     /// The most recent anchor the provider detects on the right hand.
     static var latestRightHand: HandAnchor?
 
+    /// Set this to `true` when the host app already runs its own ARKit hand
+    /// tracking and feeds `MockHandTrackingController.shared` (via `applyJoints`).
+    /// The glove then renders from the controller instead of starting a second
+    /// `HandTrackingProvider` — visionOS won't reliably feed two concurrent hand
+    /// providers, so a second session would starve and the gloves would sit at
+    /// the origin. Leave `false` (default) for standalone use, where the package
+    /// owns the session.
+    public static var useExternalHandSource = false
+
     public init(scene: RealityKit.Scene) {
         #if !targetEnvironment(simulator)
-        Task { await Self.runSession() }
+        if !Self.useExternalHandSource {
+            Task { await Self.runSession() }
+        }
         #endif
     }
 
@@ -119,10 +130,10 @@ public struct HandTrackingSystem: System {
             #if targetEnvironment(simulator)
             driveFromMock(hand, root: entity)
             #else
-            // During replay the recording owns the controller's joints; render
-            // those so the captured motion plays back on device. Otherwise follow
-            // live ARKit.
-            if MockHandTrackingController.shared.isPlayingBack {
+            // Render from the controller's joints when an external source feeds
+            // it, or while a recording replays. Otherwise follow live ARKit from
+            // the package's own session.
+            if Self.useExternalHandSource || MockHandTrackingController.shared.isPlayingBack {
                 driveFromControllerJoints(hand, root: entity)
             } else {
                 driveFromARKit(hand, root: entity)
