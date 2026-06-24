@@ -26,6 +26,11 @@ final class RiggedGloveDriver {
     private var arkitForIndex: [Int: HandSkeleton.JointName] = [:]
     /// model.jointTransforms index -> parent index in the skeleton (or nil at root).
     private var parentForIndex: [Int: Int] = [:]
+    /// The rig's bind/rest local transforms, captured once. We keep each joint's
+    /// rest translation + scale (the glove's own proportions) and only drive the
+    /// rotation from ARKit — otherwise the real-hand bone lengths stretch the
+    /// skinned mesh.
+    private var restLocals: [Transform] = []
 
     /// Builds a driver for the skinned model under `root`, if one exists.
     init?(root: Entity, chirality: AnchoringComponent.Target.Chirality) {
@@ -33,6 +38,7 @@ final class RiggedGloveDriver {
         let names = model.jointNames
         guard !names.isEmpty else { return nil }
         self.model = model
+        self.restLocals = model.jointTransforms
 
         let table = Self.nameTable(chirality: chirality)
 
@@ -59,27 +65,33 @@ final class RiggedGloveDriver {
     @discardableResult
     func pose(world: [HandSkeleton.JointName: simd_float4x4]) -> Bool {
         guard let wrist = world[.wrist] ?? world[.forearmWrist] else { return false }
+        guard !restLocals.isEmpty else { return false }
 
-        // Place the whole skeleton at the wrist.
+        // Place the whole skeleton at the wrist (world placement of the rig root).
         model.setTransformMatrix(wrist, relativeTo: nil)
 
-        var transforms = model.jointTransforms
+        var transforms = restLocals  // start from the rig's rest pose every frame
         for (i, aj) in arkitForIndex {
-            guard let childWorld = world[aj] else { continue }
+            guard i < transforms.count, let childWorld = world[aj] else { continue }
 
             // Parent world: the mapped ARKit joint of the skeleton parent, else
-            // the wrist (skeleton root).
+            // the wrist (skeleton root). Joints whose parent isn't tracked keep rest.
             let parentWorld: simd_float4x4
             if let p = parentForIndex[i], let paj = arkitForIndex[p], let pw = world[paj] {
                 parentWorld = pw
+            } else if parentForIndex[i] == nil {
+                // Skeleton root (wrist): keep its rest local; the model entity is
+                // already placed at the wrist in world space.
+                continue
             } else {
                 parentWorld = wrist
             }
 
-            let local = parentWorld.inverse * childWorld
-            if i < transforms.count {
-                transforms[i] = Transform(matrix: local)
-            }
+            // World rotation of this joint relative to its parent, applied on top
+            // of the rig's own rest translation + scale (preserves proportions).
+            let localRotation = Transform(matrix: parentWorld.inverse * childWorld).rotation
+            let rest = restLocals[i]
+            transforms[i] = Transform(scale: rest.scale, rotation: localRotation, translation: rest.translation)
         }
         model.jointTransforms = transforms
         return true
