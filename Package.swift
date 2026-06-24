@@ -31,7 +31,11 @@ let package = Package(
         .target(
             name: "DicyaninHandGlove",
             dependencies: ["DicyaninMockHandTracking"],
-            path: "Sources/DicyaninHandGlove"
+            path: "Sources/DicyaninHandGlove",
+            resources: [
+                .process("Resources/LeftGlove.usdz"),
+                .process("Resources/RightGlove.usdz")
+            ]
         ),
         .target(
             name: "DicyaninHandRecording",

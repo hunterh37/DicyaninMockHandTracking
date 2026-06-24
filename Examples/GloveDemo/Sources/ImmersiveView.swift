@@ -3,6 +3,8 @@ import DicyaninHandGlove
 
 struct ImmersiveView: View {
     var body: some View {
-        HandGloveView()
+        HandGloveView(configuration: .init(
+            style: .model(left: "LeftGlove", right: "RightGlove")
+        ))
     }
 }

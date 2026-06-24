@@ -90,7 +90,8 @@ public struct HandTrackingSystem: System {
         // Rigged-model style: load the USDZ and attach it; if it fails, fall back.
         if case let .model(left, right) = config.style {
             let name = (hand.chirality == .left) ? left : right
-            if let model = try? Entity.loadModel(named: name) {
+            if let model = (try? Entity.loadModel(named: name))
+                ?? (try? Entity.loadModel(named: name, in: .module)) {
                 root.addChild(model)
                 return
             }
