@@ -12,7 +12,11 @@ let package = Package(
         // Glove hands built on Apple's "Tracking and visualizing hand movement"
         // sample: a rigged glove that maps every hand-skeleton joint, with a
         // simulator bridge to the mock controller. visionOS only.
-        .library(name: "DicyaninHandGlove", targets: ["DicyaninHandGlove"])
+        .library(name: "DicyaninHandGlove", targets: ["DicyaninHandGlove"]),
+        // v4.0: record live/mock glove hand-tracking sessions, persist them,
+        // and replay the captured glove animation. Cross-platform (visionOS +
+        // macOS), built on the mock controller and the shared transport packet.
+        .library(name: "DicyaninHandRecording", targets: ["DicyaninHandRecording"])
     ],
     targets: [
         .target(
@@ -28,6 +32,16 @@ let package = Package(
             name: "DicyaninHandGlove",
             dependencies: ["DicyaninMockHandTracking"],
             path: "Sources/DicyaninHandGlove"
+        ),
+        .target(
+            name: "DicyaninHandRecording",
+            dependencies: ["DicyaninMockHandTracking", "DicyaninHandTrackingTransport"],
+            path: "Sources/DicyaninHandRecording"
+        ),
+        .testTarget(
+            name: "DicyaninHandRecordingTests",
+            dependencies: ["DicyaninHandRecording", "DicyaninMockHandTracking", "DicyaninHandTrackingTransport"],
+            path: "Tests/DicyaninHandRecordingTests"
         )
     ]
 )

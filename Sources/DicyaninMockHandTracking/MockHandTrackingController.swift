@@ -2,6 +2,9 @@ import Foundation
 import simd
 import Combine
 import DicyaninHandTrackingTransport
+#if os(visionOS)
+import ARKit.hand_skeleton
+#endif
 
 /// A snapshot of both simulated hands at one instant.
 public struct MockHandSnapshot: Sendable, Equatable {
@@ -19,16 +22,35 @@ public final class MockHandTrackingController: ObservableObject {
     // World-space hand positions (head-relative; Y=0 is eye level, negative Z is in front).
     // Pushed forward (Z = -0.72) and pulled in/up slightly so the hand model + gun sit out
     // ahead of the camera where they're actually visible in the simulator.
-    @Published public var leftHandPosition: SIMD3<Float> = [-0.22, -0.26, -0.72]
-    @Published public var rightHandPosition: SIMD3<Float> = [0.22, -0.26, -0.72]
+    @Published public var leftHandPosition: SIMD3<Float> = [-0.22, -0.26, -0.72] {
+        didSet { recomputeJoints(.left) }
+    }
+    @Published public var rightHandPosition: SIMD3<Float> = [0.22, -0.26, -0.72] {
+        didSet { recomputeJoints(.right) }
+    }
 
     // Per-hand yaw offset (radians, about the head-up axis). Lets the simulator operator
     // aim the gun left/right independently of where the head is looking. Driven by the
     // rotation sliders under each joystick (MockHandStickView).
-    @Published public var leftHandYaw: Float = 0
-    @Published public var rightHandYaw: Float = 0
+    @Published public var leftHandYaw: Float = 0 {
+        didSet { recomputeJoints(.left) }
+    }
+    @Published public var rightHandYaw: Float = 0 {
+        didSet { recomputeJoints(.right) }
+    }
 
     @Published public var isPinching: Bool = false
+
+    #if os(visionOS)
+    /// World-space transform of every hand-skeleton joint for the left hand,
+    /// derived from the simulator rest pose composed with `leftHandPosition` and
+    /// `leftHandYaw`. This is the simulator's stand-in for an ARKit `HandSkeleton`,
+    /// so joint-based logic (palm contact, pointing rays) has a source in the sim.
+    @Published public private(set) var leftHandJoints: [HandSkeleton.JointName: simd_float4x4] = [:]
+
+    /// World-space joint transforms for the right hand. See ``leftHandJoints``.
+    @Published public private(set) var rightHandJoints: [HandSkeleton.JointName: simd_float4x4] = [:]
+    #endif
 
     private var pinchTask: Task<Void, Never>?
 
@@ -40,7 +62,32 @@ public final class MockHandTrackingController: ObservableObject {
     private var webcamReceiver: HandPoseReceiver?
     private var webcamTask: Task<Void, Never>?
 
-    private init() {}
+    private init() {
+        #if os(visionOS)
+        recomputeJoints(.left)
+        recomputeJoints(.right)
+        #endif
+    }
+
+    private enum Hand { case left, right }
+
+    /// Recompute and publish the joint world transforms for one hand from its
+    /// current position and yaw. Cheap (27 joints) and only fires when the hand
+    /// actually moves.
+    private func recomputeJoints(_ hand: Hand) {
+        #if os(visionOS)
+        switch hand {
+        case .left:
+            leftHandJoints = HandRestPose.worldTransforms(
+                position: leftHandPosition, yaw: leftHandYaw, chirality: .left
+            )
+        case .right:
+            rightHandJoints = HandRestPose.worldTransforms(
+                position: rightHandPosition, yaw: rightHandYaw, chirality: .right
+            )
+        }
+        #endif
+    }
 
     /// Fires a momentary pinch (60 ms), matching a real thumb-index gesture.
     public func simulatePinch() {

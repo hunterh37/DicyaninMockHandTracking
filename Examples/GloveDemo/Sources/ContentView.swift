@@ -1,5 +1,6 @@
 import SwiftUI
 import DicyaninMockHandTracking
+import DicyaninHandRecording
 
 struct ContentView: View {
     @Environment(\.openImmersiveSpace) private var openImmersiveSpace
@@ -31,6 +32,8 @@ struct ContentView: View {
             .buttonStyle(.borderedProminent)
 
             MockHandControlView()
+
+            HandRecordingControlView()
         }
         .padding(40)
     }

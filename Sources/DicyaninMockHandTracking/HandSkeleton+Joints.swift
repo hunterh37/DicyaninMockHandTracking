@@ -93,7 +93,7 @@ public enum HandJoints {
 
     /// For each joint, the joint that precedes it along the same finger (toward
     /// the wrist), if any. Used to draw bone segments between joints.
-    static let parents: [HandSkeleton.JointName: HandSkeleton.JointName] = {
+    public static let parents: [HandSkeleton.JointName: HandSkeleton.JointName] = {
         var map: [HandSkeleton.JointName: HandSkeleton.JointName] = [:]
         var lastByFinger: [Finger: HandSkeleton.JointName] = [:]
         for joint in all {

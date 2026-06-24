@@ -20,6 +20,8 @@ targets:
         product: DicyaninMockHandTracking
       - package: DicyaninMockHandTracking
         product: DicyaninHandGlove
+      - package: DicyaninMockHandTracking
+        product: DicyaninHandRecording
     info:
       path: Generated/Info.plist
       properties:

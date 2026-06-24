@@ -16,9 +16,7 @@ import RealityKit
 import ARKit
 import simd
 
-#if targetEnvironment(simulator)
-import DicyaninMockHandTracking
-#endif
+@_exported import DicyaninMockHandTracking
 
 /// A system that drives every entity carrying a ``HandTrackingComponent``.
 public struct HandTrackingSystem: System {
@@ -166,24 +164,10 @@ public struct HandTrackingSystem: System {
     /// exists. Joints are placed in the hand's local space; the root entity is
     /// then moved by the mock controller.
     private func applyRestPose(_ hand: HandTrackingComponent, chirality: AnchoringComponent.Target.Chirality) {
-        let mirror: Float = (chirality == .left) ? -1 : 1
-
-        // Lateral offset per finger (meters), thumb splayed out to the side.
-        let fingerX: [Finger: Float] = [
-            .forearm: 0, .thumb: -0.040, .index: -0.020, .middle: 0, .ring: 0.020, .little: 0.038
-        ]
-        // Forward distance from the wrist per bone (negative Z points away from the body).
-        let boneZ: [Bone: Float] = [
-            .arm: 0.18, .wrist: 0.06, .metacarpal: 0.0,
-            .knuckle: -0.03, .intermediateBase: -0.06, .intermediateTip: -0.085, .tip: -0.105
-        ]
-
+        let side: HandRestPose.Chirality = (chirality == .left) ? .left : .right
         for joint in HandJoints.all {
             guard let entity = hand.joints[joint.name] else { continue }
-            var x = (fingerX[joint.finger] ?? 0) * mirror
-            // Splay the thumb further out as it extends.
-            if joint.finger == .thumb { x += (boneZ[joint.bone] ?? 0) * 0.4 * mirror }
-            entity.position = [x, 0, boneZ[joint.bone] ?? 0]
+            entity.position = HandRestPose.localPosition(for: joint, chirality: side)
         }
     }
     #endif

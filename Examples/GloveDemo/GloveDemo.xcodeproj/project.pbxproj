@@ -10,6 +10,7 @@
 		096D736CA8956CA794233A41 /* DicyaninMockHandTracking in Frameworks */ = {isa = PBXBuildFile; productRef = C0CAF6DE10D144A28BA6A1E9 /* DicyaninMockHandTracking */; };
 		21800B6D59CFC383B94B5874 /* DicyaninHandGlove in Frameworks */ = {isa = PBXBuildFile; productRef = 22849964D2DDC9B669A82960 /* DicyaninHandGlove */; };
 		3E55767EBC88A28433060BB6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E99A98E641A75F88E49C47E /* ContentView.swift */; };
+		7658B4BCA3C539F75F9B0A3F /* DicyaninHandRecording in Frameworks */ = {isa = PBXBuildFile; productRef = DC3BE0E94049D7ED81C4FC0D /* DicyaninHandRecording */; };
 		98E8CA6882C746D2478F56FE /* ImmersiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C17B8AF70E544230482446 /* ImmersiveView.swift */; };
 		F4B8E261C4BB5A108F7BB330 /* GloveDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8983739E9D89A09C5FE8B4A /* GloveDemoApp.swift */; };
 /* End PBXBuildFile section */
@@ -29,6 +30,7 @@
 			files = (
 				096D736CA8956CA794233A41 /* DicyaninMockHandTracking in Frameworks */,
 				21800B6D59CFC383B94B5874 /* DicyaninHandGlove in Frameworks */,
+				7658B4BCA3C539F75F9B0A3F /* DicyaninHandRecording in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -88,6 +90,7 @@
 			packageProductDependencies = (
 				C0CAF6DE10D144A28BA6A1E9 /* DicyaninMockHandTracking */,
 				22849964D2DDC9B669A82960 /* DicyaninHandGlove */,
+				DC3BE0E94049D7ED81C4FC0D /* DicyaninHandRecording */,
 			);
 			productName = GloveDemo;
 			productReference = C4A1B926A8C60C565CF4C6FF /* GloveDemo.app */;
@@ -333,6 +336,10 @@
 		C0CAF6DE10D144A28BA6A1E9 /* DicyaninMockHandTracking */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DicyaninMockHandTracking;
+		};
+		DC3BE0E94049D7ED81C4FC0D /* DicyaninHandRecording */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DicyaninHandRecording;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
