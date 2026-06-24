@@ -4,6 +4,8 @@ Simulated hand tracking for visionOS. Drives mock hand positions and pinch gestu
 
 The idea: write your app against one hand-pose source. In the **simulator** it reads from `MockHandTrackingController` and you steer the hands with an on-screen control panel. On a **real device** the exact same call sites read live ARKit `HandAnchor` data — no changes to your app logic.
 
+**New in 3.0:** drive that same mock state from a **real webcam**. The included [`WebcamHandRunner`](Examples/WebcamHandRunner) macOS app uses Vision hand-pose estimation to watch your hands and streams the poses over the local network straight into your **live, running** visionOS app — so you hold your hands up to your Mac's camera and the sphere/gun/hand in the simulator follows. See [Webcam hand tracking](#webcam-hand-tracking-30).
+
 | Resting | Aiming + pinch |
 | --- | --- |
 | ![Control panel](Screenshots/control-panel.png) | ![Control panel, active](Screenshots/control-panel-active.png) |
@@ -11,8 +13,13 @@ The idea: write your app against one hand-pose source. In the **simulator** it r
 ## Install
 
 ```swift
-.package(url: "https://github.com/hunterh37/DicyaninMockHandTracking.git", from: "2.0.0")
+.package(url: "https://github.com/hunterh37/DicyaninMockHandTracking.git", from: "3.0.0")
 ```
+
+Two products ship from this package:
+
+- `DicyaninMockHandTracking` — the visionOS mock controller + control overlay (add this to your app target).
+- `DicyaninHandTrackingTransport` — a small, cross-platform (visionOS + macOS) networking layer that carries hand poses between processes. The webcam runner uses it; your app only needs it if you call the transport types directly.
 
 Then add `DicyaninMockHandTracking` to your target's dependencies.
 
@@ -110,6 +117,68 @@ MockHandControlView()
 #endif
 ```
 
+## Webcam hand tracking (3.0)
+
+Develop with your actual hands instead of dragging joysticks. The
+[`WebcamHandRunner`](Examples/WebcamHandRunner) macOS app estimates your hand
+poses from any webcam (Apple's Vision `VNDetectHumanHandPoseRequest`) and
+broadcasts them; your visionOS app subscribes and applies them to
+`MockHandTrackingController.shared`. Because every existing consumer already
+reacts to that controller's `@Published` state, the webcam poses flow through
+the **exact same path** the on-screen joysticks use — no consumer code changes.
+
+```
+┌──────────────────────┐   hand poses (JSON/TCP)   ┌──────────────────────────┐
+│  WebcamHandRunner.app │ ────────────────────────▶ │  your visionOS app (sim) │
+│  webcam → Vision      │   _dicyaninhands._tcp     │  MockHandTrackingController│
+└──────────────────────┘                            └──────────────────────────┘
+```
+
+**1. Launch the runner** (the simulator shares your Mac's network, so localhost just works):
+
+```bash
+cd Examples/WebcamHandRunner
+xcodegen generate          # one-time, or after editing project.yml
+open WebcamHandRunner.xcodeproj
+# Build & run the WebcamHandRunner scheme, grant camera access, hold your hands up.
+```
+
+**2. Connect from your visionOS app** — one call at launch, in simulator builds:
+
+```swift
+import DicyaninMockHandTracking
+
+struct MyApp: App {
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+                .task {
+                    #if targetEnvironment(simulator)
+                    MockHandTrackingController.shared.connectToWebcamRunner() // localhost:50673
+                    #endif
+                }
+        }
+    }
+}
+```
+
+That's it. Move your hands in front of the camera and the same `leftHandPosition`
+/ `rightHandPosition` / `isPinching` state updates live; pinch thumb-to-index to
+fire a pinch. Tune horizontal/vertical reach and mirroring in the runner window.
+
+On a **real Vision Pro** on the same Wi-Fi as the Mac, use Bonjour discovery
+instead of localhost:
+
+```swift
+MockHandTrackingController.shared.connectToWebcamRunner(bonjourName: nil) // first runner found
+```
+
+Call `disconnectWebcamRunner()` to hand control back to the on-screen joysticks.
+
+> The webcam gives a single 2D view, so depth (`z`) is approximated from hand
+> size and yaw from the wrist→knuckle direction. It's built for fast iteration
+> in the simulator, not metric precision — ship against ARKit on device.
+
 ## Example app
 
 A complete, runnable visionOS example lives in [`Examples/HandTrackingDemo`](Examples/HandTrackingDemo). It opens an immersive space with a **green sphere that follows the mock right hand** — drag the right-hand joystick in `MockHandControlView` and the sphere moves with it. It uses the same `HandSource` abstraction shown above, so the code path is identical on a real device.
@@ -130,6 +199,7 @@ Then run the `HandTrackingDemo` scheme on a visionOS simulator, tap **Open Immer
 
 - visionOS 1.0+
 - Swift 5.9+
+- macOS 13.0+ and [XcodeGen](https://github.com/yonaskolb/XcodeGen) for the optional `WebcamHandRunner`
 
 ## License
 

@@ -1,0 +1,42 @@
+name: WebcamHandRunner
+options:
+  bundleIdPrefix: com.dicyanin.webcamhandrunner
+  deploymentTarget:
+    macOS: "13.0"
+  createIntermediateGroups: true
+
+packages:
+  DicyaninMockHandTracking:
+    # Local path to the package this runner pairs with.
+    path: ../..
+
+targets:
+  WebcamHandRunner:
+    type: application
+    platform: macOS
+    sources:
+      - Sources
+    dependencies:
+      - package: DicyaninMockHandTracking
+        product: DicyaninHandTrackingTransport
+    info:
+      path: Generated/Info.plist
+      properties:
+        CFBundleDisplayName: Webcam Hand Runner
+        LSMinimumSystemVersion: "13.0"
+        NSCameraUsageDescription: >-
+          Webcam Hand Runner uses the camera to estimate your hand poses and
+          stream them to a running visionOS app.
+        NSLocalNetworkUsageDescription: >-
+          Webcam Hand Runner advertises a local service so a visionOS app on
+          this network can receive your hand poses.
+        NSBonjourServices:
+          - _dicyaninhands._tcp
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.dicyanin.webcamhandrunner
+        GENERATE_INFOPLIST_FILE: NO
+        SWIFT_VERSION: "5.9"
+        CODE_SIGNING_ALLOWED: YES
+        CODE_SIGN_IDENTITY: "-"
+        ENABLE_HARDENED_RUNTIME: YES

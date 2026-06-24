@@ -1,6 +1,7 @@
 import Foundation
 import simd
 import Combine
+import DicyaninHandTrackingTransport
 
 /// A snapshot of both simulated hands at one instant.
 public struct MockHandSnapshot: Sendable, Equatable {
@@ -30,6 +31,14 @@ public final class MockHandTrackingController: ObservableObject {
     @Published public var isPinching: Bool = false
 
     private var pinchTask: Task<Void, Never>?
+
+    /// True while a live webcam runner is feeding this controller. When set,
+    /// on-screen `MockHandControlView` joysticks should be treated as read-only
+    /// (the network is the source of truth).
+    @Published public private(set) var isWebcamConnected: Bool = false
+
+    private var webcamReceiver: HandPoseReceiver?
+    private var webcamTask: Task<Void, Never>?
 
     private init() {}
 
@@ -61,5 +70,67 @@ public final class MockHandTrackingController: ObservableObject {
             }
             continuation.onTermination = { _ in task.cancel() }
         }
+    }
+
+    // MARK: - Live webcam bridge
+
+    /// Apply a packet received from the webcam runner to the published hand
+    /// state. Because every consumer (`updates()`, `HandSource`,
+    /// `MockHandControlView`) already reacts to these `@Published` properties,
+    /// the webcam poses flow into the live app through the exact same path the
+    /// on-screen joysticks use — no consumer needs to change.
+    public func apply(_ packet: HandPosePacket) {
+        if packet.leftTracked { leftHandPosition = packet.leftPosition }
+        if packet.rightTracked { rightHandPosition = packet.rightPosition }
+        leftHandYaw = packet.leftYaw
+        rightHandYaw = packet.rightYaw
+        if packet.isPinching && !isPinching {
+            simulatePinch()
+        } else if !packet.isPinching {
+            // Honor a held-open hand immediately rather than waiting on the
+            // momentary-pinch timer.
+            isPinching = false
+        }
+    }
+
+    /// Connect to a running webcam runner and stream its hand poses into this
+    /// controller live. Call once (e.g. from `task {}` on your root view) in
+    /// simulator builds. Use `"localhost"` when the app runs in the visionOS
+    /// simulator on the same Mac as the runner.
+    ///
+    /// Safe to call repeatedly; an existing connection is torn down first.
+    public func connectToWebcamRunner(
+        host: String = "localhost",
+        port: UInt16 = HandPoseWire.defaultPort
+    ) {
+        connect(to: .host(host, port: port))
+    }
+
+    /// Discover and connect to a webcam runner over Bonjour (for a real Vision
+    /// Pro on the same Wi-Fi as the Mac).
+    public func connectToWebcamRunner(bonjourName: String? = nil) {
+        connect(to: .bonjour(name: bonjourName))
+    }
+
+    private func connect(to endpoint: HandPoseReceiver.Endpoint) {
+        disconnectWebcamRunner()
+        let receiver = HandPoseReceiver(endpoint)
+        webcamReceiver = receiver
+        webcamTask = Task { @MainActor in
+            isWebcamConnected = true
+            for await packet in receiver.packets() {
+                apply(packet)
+            }
+            isWebcamConnected = false
+        }
+    }
+
+    /// Stop consuming webcam poses and return control to the on-screen joysticks.
+    public func disconnectWebcamRunner() {
+        webcamReceiver?.cancel()
+        webcamReceiver = nil
+        webcamTask?.cancel()
+        webcamTask = nil
+        isWebcamConnected = false
     }
 }
