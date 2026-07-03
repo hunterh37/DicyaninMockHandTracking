@@ -13,6 +13,9 @@ public struct HandRecordingControlView: View {
     @ObservedObject private var manager: HandRecordingManager
     @State private var name: String = "Recording"
     @State private var loop: Bool = false
+    @State private var trimTarget: HandRecordingSession?
+    @State private var renameTarget: HandRecordingSession?
+    @State private var renameText: String = ""
 
     @MainActor
     public init(manager: HandRecordingManager? = nil) {
@@ -33,6 +36,29 @@ public struct HandRecordingControlView: View {
         .padding()
         .frame(minWidth: 320)
         .onAppear { manager.refresh() }
+        .sheet(item: $trimTarget) { session in
+            HandRecordingTrimView(
+                session: session,
+                manager: manager,
+                onDismiss: { trimTarget = nil },
+                onSaved: { _ in trimTarget = nil }
+            )
+        }
+        .alert("Rename Recording", isPresented: Binding(
+            get: { renameTarget != nil },
+            set: { if !$0 { renameTarget = nil } }
+        )) {
+            TextField("Name", text: $renameText)
+            Button("Rename") {
+                if let target = renameTarget {
+                    manager.rename(target, to: renameText)
+                }
+                renameTarget = nil
+            }
+            Button("Cancel", role: .cancel) { renameTarget = nil }
+        } message: {
+            Text("Enter a new name for this recording.")
+        }
     }
 
     @ViewBuilder private var transport: some View {
@@ -53,7 +79,7 @@ public struct HandRecordingControlView: View {
                 } label: {
                     Label("Record", systemImage: "record.circle")
                 }
-                .disabled(manager.isPlaying)
+                .disabled(manager.mode != .idle)
             }
         }
 
@@ -70,7 +96,13 @@ public struct HandRecordingControlView: View {
     }
 
     private var statusText: String {
-        let verb = manager.isRecording ? "REC" : "PLAY"
+        let verb: String
+        switch manager.mode {
+        case .recording: verb = "REC"
+        case .playing: verb = "PLAY"
+        case .trimming: verb = "TRIM"
+        case .idle: verb = ""
+        }
         return String(format: "%@ %.1fs", verb, manager.elapsed)
     }
 
@@ -101,6 +133,22 @@ public struct HandRecordingControlView: View {
                             Image(systemName: "square.and.arrow.up")
                         }
                     }
+
+                    Button {
+                        renameText = session.name
+                        renameTarget = session
+                    } label: {
+                        Image(systemName: "pencil")
+                    }
+                    .disabled(manager.mode != .idle)
+
+                    Button {
+                        trimTarget = session
+                        manager.startTrimming(session)
+                    } label: {
+                        Image(systemName: "timeline.selection")
+                    }
+                    .disabled(manager.mode != .idle)
 
                     Button {
                         manager.dumpToConsole(session)
