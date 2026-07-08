@@ -66,4 +66,89 @@ public struct HandRecordingSession: Codable, Sendable, Equatable, Identifiable {
 
     /// Number of captured frames.
     public var frameCount: Int { frames.count }
+
+    /// Returns a new session containing only the frames between `startTime` and
+    /// `endTime` (inclusive), with frame times rebased so the first kept frame
+    /// starts at zero.
+    public func trimmed(from startTime: TimeInterval, to endTime: TimeInterval) -> HandRecordingSession {
+        let kept = frames.filter { $0.time >= startTime && $0.time <= endTime }
+        let baseTime = kept.first?.time ?? 0
+        let rebased = kept.map { frame in
+            var f = frame
+            f.time = frame.time - baseTime
+            return f
+        }
+        return HandRecordingSession(
+            id: UUID(),
+            name: "\(name) (trimmed)",
+            createdAt: Date(),
+            frames: rebased
+        )
+    }
+
+    /// Which hands to keep when filtering a recording.
+    public enum HandFilter: String, CaseIterable, Sendable {
+        case both = "Both Hands"
+        case leftOnly = "Left Only"
+        case rightOnly = "Right Only"
+    }
+
+    /// Returns a new session with only the specified hand(s) retained.
+    /// The other hand's joints are removed and its tracking flag is set to false.
+    public func filtered(hand: HandFilter) -> HandRecordingSession {
+        guard hand != .both else { return self }
+        let filtered = frames.map { frame -> HandRecordingFrame in
+            var f = frame
+            switch hand {
+            case .leftOnly:
+                f.rightJoints = nil
+                f.packet.rightTracked = false
+                f.packet.rightPosition = .zero
+                f.packet.rightYaw = 0
+            case .rightOnly:
+                f.leftJoints = nil
+                f.packet.leftTracked = false
+                f.packet.leftPosition = .zero
+                f.packet.leftYaw = 0
+            case .both:
+                break
+            }
+            return f
+        }
+        return HandRecordingSession(
+            id: id,
+            name: name,
+            createdAt: createdAt,
+            frames: filtered
+        )
+    }
+
+    /// Combined trim + hand filter in one step.
+    public func trimmed(from startTime: TimeInterval,
+                        to endTime: TimeInterval,
+                        hand: HandFilter = .both) -> HandRecordingSession {
+        let kept = frames.filter { $0.time >= startTime && $0.time <= endTime }
+        let baseTime = kept.first?.time ?? 0
+        let rebased = kept.map { frame in
+            var f = frame
+            f.time = frame.time - baseTime
+            return f
+        }
+        var result = HandRecordingSession(
+            id: UUID(),
+            name: "\(name) (trimmed)",
+            createdAt: Date(),
+            frames: rebased
+        )
+        if hand != .both {
+            result = result.filtered(hand: hand)
+        }
+        return result
+    }
+
+    /// The frame closest to the given time, or `nil` when the session is empty.
+    public func frame(nearestTo time: TimeInterval) -> HandRecordingFrame? {
+        guard !frames.isEmpty else { return nil }
+        return frames.min(by: { abs($0.time - time) < abs($1.time - time) })
+    }
 }

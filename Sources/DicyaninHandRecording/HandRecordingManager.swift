@@ -32,6 +32,7 @@ public final class HandRecordingManager: ObservableObject {
         case idle
         case recording
         case playing
+        case trimming
     }
 
     /// Current activity.
@@ -164,11 +165,14 @@ public final class HandRecordingManager: ObservableObject {
 
         playbackTask = Task { @MainActor [weak self] in
             repeat {
-                let start = Date()
+                let start = ContinuousClock.now
                 for frame in session.frames {
                     if Task.isCancelled { break }
-                    let wait = frame.time - Date().timeIntervalSince(start)
-                    if wait > 0 { try? await Task.sleep(for: .seconds(wait)) }
+                    let elapsed = ContinuousClock.now - start
+                    let target = Duration.seconds(frame.time)
+                    if target > elapsed {
+                        try? await Task.sleep(for: target - elapsed)
+                    }
                     if Task.isCancelled { break }
                     self?.applyFrame(frame)
                     self?.elapsed = frame.time
@@ -209,6 +213,130 @@ public final class HandRecordingManager: ObservableObject {
         playbackTask = nil
         controller.setPlayingBack(false)
         if mode == .playing { mode = .idle }
+    }
+
+    // MARK: - Trimming
+
+    /// The session currently being trimmed.
+    @Published public var trimmingSession: HandRecordingSession?
+
+    /// Enters trimming mode for a session. The UI should present the trim
+    /// controls. Call ``previewTrimRange(_:from:to:loop:)`` to preview
+    /// a sub-range, and ``saveTrimmed(_:from:to:)`` to persist the result.
+    public func startTrimming(_ session: HandRecordingSession) {
+        stopPlayback()
+        trimmingSession = session
+        mode = .trimming
+        elapsed = 0
+    }
+
+    /// Cancels trimming and returns to idle.
+    public func cancelTrimming() {
+        stopPlayback()
+        trimmingSession = nil
+        if mode == .trimming { mode = .idle }
+    }
+
+    /// Previews playback of only the frames between `startTime` and `endTime`.
+    public func previewTrimRange(_ session: HandRecordingSession,
+                                 from startTime: TimeInterval,
+                                 to endTime: TimeInterval,
+                                 loop: Bool = true) {
+        let trimmed = session.trimmed(from: startTime, to: endTime)
+        guard !trimmed.frames.isEmpty else { return }
+
+        playbackTask?.cancel()
+        playbackTask = nil
+        elapsed = 0
+
+        controller.setPlayingBack(true)
+
+        playbackTask = Task { @MainActor [weak self] in
+            repeat {
+                let start = ContinuousClock.now
+                for frame in trimmed.frames {
+                    if Task.isCancelled { break }
+                    let elapsed = ContinuousClock.now - start
+                    let target = Duration.seconds(frame.time)
+                    if target > elapsed {
+                        try? await Task.sleep(for: target - elapsed)
+                    }
+                    if Task.isCancelled { break }
+                    self?.applyFrame(frame)
+                    self?.elapsed = startTime + frame.time
+                }
+            } while loop && !Task.isCancelled
+            self?.controller.setPlayingBack(false)
+        }
+    }
+
+    /// Seeks to a single frame at the given time within the trimming session
+    /// so the user can preview what the recording looks like at a point.
+    public func seekToFrame(in session: HandRecordingSession, at time: TimeInterval) {
+        guard let frame = session.frame(nearestTo: time) else { return }
+        controller.setPlayingBack(true)
+        applyFrame(frame)
+        elapsed = frame.time
+    }
+
+    /// Trims the session to the given range, saves the result, and exits
+    /// trimming mode. Returns the new trimmed session.
+    @discardableResult
+    public func saveTrimmed(_ session: HandRecordingSession,
+                            from startTime: TimeInterval,
+                            to endTime: TimeInterval,
+                            hand: HandRecordingSession.HandFilter = .both,
+                            name: String? = nil) -> HandRecordingSession {
+        playbackTask?.cancel()
+        playbackTask = nil
+        controller.setPlayingBack(false)
+
+        var trimmed = session.trimmed(from: startTime, to: endTime, hand: hand)
+        if let name, !name.isEmpty {
+            trimmed.name = name
+        }
+        try? store.save(trimmed)
+        sessions = store.loadAll()
+
+        trimmingSession = nil
+        mode = .idle
+        return trimmed
+    }
+
+    /// Replaces the original session with a trimmed version (same id, overwrites
+    /// the old file). Returns the updated session.
+    @discardableResult
+    public func saveTrimmedOverOriginal(_ session: HandRecordingSession,
+                                        from startTime: TimeInterval,
+                                        to endTime: TimeInterval,
+                                        hand: HandRecordingSession.HandFilter = .both,
+                                        name: String? = nil) -> HandRecordingSession {
+        playbackTask?.cancel()
+        playbackTask = nil
+        controller.setPlayingBack(false)
+
+        var trimmed = session.trimmed(from: startTime, to: endTime, hand: hand)
+        trimmed.id = session.id
+        if let name, !name.isEmpty {
+            trimmed.name = name
+        } else {
+            trimmed.name = session.name
+        }
+        try? store.save(trimmed)
+        sessions = store.loadAll()
+
+        trimmingSession = nil
+        mode = .idle
+        return trimmed
+    }
+
+    /// Renames a session on disk.
+    public func rename(_ session: HandRecordingSession, to newName: String) {
+        guard !newName.isEmpty else { return }
+        var updated = session
+        updated.name = newName
+        try? store.save(updated)
+        sessions = store.loadAll()
     }
 
     // MARK: - Library management
