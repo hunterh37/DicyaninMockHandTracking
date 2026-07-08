@@ -165,11 +165,14 @@ public final class HandRecordingManager: ObservableObject {
 
         playbackTask = Task { @MainActor [weak self] in
             repeat {
-                let start = Date()
+                let start = ContinuousClock.now
                 for frame in session.frames {
                     if Task.isCancelled { break }
-                    let wait = frame.time - Date().timeIntervalSince(start)
-                    if wait > 0 { try? await Task.sleep(for: .seconds(wait)) }
+                    let elapsed = ContinuousClock.now - start
+                    let target = Duration.seconds(frame.time)
+                    if target > elapsed {
+                        try? await Task.sleep(for: target - elapsed)
+                    }
                     if Task.isCancelled { break }
                     self?.applyFrame(frame)
                     self?.elapsed = frame.time
@@ -250,11 +253,14 @@ public final class HandRecordingManager: ObservableObject {
 
         playbackTask = Task { @MainActor [weak self] in
             repeat {
-                let start = Date()
+                let start = ContinuousClock.now
                 for frame in trimmed.frames {
                     if Task.isCancelled { break }
-                    let wait = frame.time - Date().timeIntervalSince(start)
-                    if wait > 0 { try? await Task.sleep(for: .seconds(wait)) }
+                    let elapsed = ContinuousClock.now - start
+                    let target = Duration.seconds(frame.time)
+                    if target > elapsed {
+                        try? await Task.sleep(for: target - elapsed)
+                    }
                     if Task.isCancelled { break }
                     self?.applyFrame(frame)
                     self?.elapsed = startTime + frame.time
