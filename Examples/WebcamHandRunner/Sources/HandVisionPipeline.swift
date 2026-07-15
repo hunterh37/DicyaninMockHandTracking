@@ -43,8 +43,11 @@ final class HandVisionPipeline: NSObject, AVCaptureVideoDataOutputSampleBufferDe
         } catch {
             return
         }
+        let w = CVPixelBufferGetWidth(pixelBuffer)
+        let h = CVPixelBufferGetHeight(pixelBuffer)
+        let aspect = CGFloat(w) / CGFloat(max(h, 1))
         let observations = request.results ?? []
-        var hands = observations.compactMap { map($0) }
+        var hands = observations.compactMap { map($0, aspect: aspect) }
         // Stable left/right split by mapped X.
         hands.sort { $0.headPosition.x < $1.headPosition.x }
         if hands.count == 2 {
@@ -73,7 +76,10 @@ final class HandVisionPipeline: NSObject, AVCaptureVideoDataOutputSampleBufferDe
         .littleIntermediateTip: .littleDIP, .littleTip: .littleTip,
     ]
 
-    private func map(_ observation: VNHumanHandPoseObservation) -> DetectedHand? {
+    /// Real-world palm length (wrist to middle knuckle) the skeleton is scaled to.
+    private let palmLength: Float = 0.09
+
+    private func map(_ observation: VNHumanHandPoseObservation, aspect: CGFloat) -> DetectedHand? {
         guard let points = try? observation.recognizedPoints(.all) else { return nil }
         func pt(_ name: VNHumanHandPoseObservation.JointName, min: Float = 0.3) -> CGPoint? {
             guard let p = points[name], p.confidence > min else { return nil }
@@ -102,17 +108,29 @@ final class HandVisionPipeline: NSObject, AVCaptureVideoDataOutputSampleBufferDe
             CGPoint(x: mirrored ? 1 - p.x : p.x, y: 1 - p.y)
         }
 
-        // Full skeleton: every joint Vision is confident about, projected the
-        // same way. Low-confidence joints fall back to the wrist so the wire
-        // array is always complete.
+        // Full skeleton. Gross hand travel uses the amplified reach mapping
+        // (project), but finger articulation must not: reusing that scale makes
+        // fingers meters long. Instead, joints are wrist-relative offsets scaled
+        // so the palm (wrist to middle knuckle) is a realistic `palmLength`,
+        // with the frame aspect folded in so proportions survive the
+        // normalized-coordinate squash.
+        let wristHead = project(wrist)
+        let palmNorm = Float(hypot((middleMCP.x - wrist.x) * aspect, middleMCP.y - wrist.y))
+        let metersPerNorm = palmLength / max(palmNorm, 0.02)
+        func jointPosition(_ p: CGPoint) -> SIMD3<Float> {
+            let dx = Float((p.x - wrist.x) * aspect) * (mirrored ? -1 : 1) * metersPerNorm
+            let dy = Float(p.y - wrist.y) * metersPerNorm
+            return wristHead + SIMD3(dx, dy, 0)
+        }
+
         var joints: [HandJointID: SIMD3<Float>] = [:]
         var overlay: [HandJointID: CGPoint] = [:]
         for (id, vn) in Self.visionJoint {
             guard let p = pt(vn, min: 0.15) else { continue }
-            joints[id] = project(p)
+            joints[id] = jointPosition(p)
             overlay[id] = flip(p)
         }
-        joints[.wrist] = project(wrist)
+        joints[.wrist] = wristHead
         overlay[.wrist] = flip(wrist)
 
         // Yaw from the wrist→middleMCP direction in the image plane.
@@ -124,7 +142,7 @@ final class HandVisionPipeline: NSObject, AVCaptureVideoDataOutputSampleBufferDe
         let pinchDist = hypot(thumbTip.x - indexTip.x, thumbTip.y - indexTip.y)
         let isPinching = handSpan > 0.04 && pinchDist < handSpan * 0.45
 
-        let headPosition = project(wrist)
+        let headPosition = wristHead
         return DetectedHand(
             headPosition: headPosition,
             yaw: yaw,
