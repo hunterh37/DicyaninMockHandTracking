@@ -126,7 +126,9 @@ poses from any webcam (Apple's Vision `VNDetectHumanHandPoseRequest`) and
 broadcasts them; your visionOS app subscribes and applies them to
 `MockHandTrackingController.shared`. Because every existing consumer already
 reacts to that controller's `@Published` state, the webcam poses flow through
-the **exact same path** the on-screen joysticks use — no consumer code changes.
+the **exact same path** the on-screen joysticks use, no consumer code changes.
+
+![Webcam hand tracking](Screenshots/webcam-hand-tracking.png)
 
 ```
 ┌──────────────────────┐   hand poses (JSON/TCP)   ┌──────────────────────────┐
