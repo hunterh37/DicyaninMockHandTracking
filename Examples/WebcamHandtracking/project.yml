@@ -1,0 +1,42 @@
+name: WebcamHandtracking
+options:
+  bundleIdPrefix: com.dicyanin.webcamhandtracking
+  deploymentTarget:
+    visionOS: "1.0"
+  createIntermediateGroups: true
+
+packages:
+  DicyaninMockHandTracking:
+    path: ../..
+
+targets:
+  WebcamHandtracking:
+    type: application
+    platform: visionOS
+    sources:
+      - Sources
+    dependencies:
+      - package: DicyaninMockHandTracking
+        product: DicyaninMockHandTracking
+      - package: DicyaninMockHandTracking
+        product: DicyaninHandGlove
+    info:
+      path: Generated/Info.plist
+      properties:
+        CFBundleDisplayName: Webcam Hands
+        NSLocalNetworkUsageDescription: >-
+          Connects to the WebcamHandRunner on your Mac to receive live hand poses.
+        NSBonjourServices:
+          - _dicyaninhands._tcp
+        UIApplicationSceneManifest:
+          UIApplicationPreferredDefaultSceneSessionRole: UIWindowSceneSessionRoleApplication
+          UIApplicationSupportsMultipleScenes: true
+          UISceneConfigurations: {}
+        UILaunchScreen: {}
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.dicyanin.webcamhandtracking
+        GENERATE_INFOPLIST_FILE: NO
+        TARGETED_DEVICE_FAMILY: "7"
+        SWIFT_VERSION: "5.9"
+        CODE_SIGNING_ALLOWED: NO

@@ -1,0 +1,344 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		255C715DA51AACA83E3B7E76 /* ImmersiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93DFBD2B16BEC585F96A10E /* ImmersiveView.swift */; };
+		36ABFEF96906CA82FC80D7F0 /* DicyaninHandGlove in Frameworks */ = {isa = PBXBuildFile; productRef = 7AD29DB0343F1CDCAD4D6493 /* DicyaninHandGlove */; };
+		505D7AB85E7C0E18236F5DA5 /* WebcamHandtrackingApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B6138F4CD3754C46FA09214 /* WebcamHandtrackingApp.swift */; };
+		94A850D03C14ED1FF45ADDAC /* DicyaninMockHandTracking in Frameworks */ = {isa = PBXBuildFile; productRef = 68D7594C78150BAF0916BE43 /* DicyaninMockHandTracking */; };
+		96F4FE4A82413A1B76CEA345 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA8471A8E3547936C220ACAE /* ContentView.swift */; };
+		EE7A6230301E410F8A893E4C /* PinchSphereView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF916AFD35C07E3FDFA8B82 /* PinchSphereView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		3B6138F4CD3754C46FA09214 /* WebcamHandtrackingApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebcamHandtrackingApp.swift; sourceTree = "<group>"; };
+		A387EF5B4453BD08B39667EE /* WebcamHandtracking.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = WebcamHandtracking.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA8471A8E3547936C220ACAE /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		D93DFBD2B16BEC585F96A10E /* ImmersiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImmersiveView.swift; sourceTree = "<group>"; };
+		E8F2CC526FAB771FFE5D9FEB /* DicyaninMockHandTracking */ = {isa = PBXFileReference; lastKnownFileType = folder; name = DicyaninMockHandTracking; path = ../..; sourceTree = SOURCE_ROOT; };
+		ECF916AFD35C07E3FDFA8B82 /* PinchSphereView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinchSphereView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		B9FD58BB8E2AC9F324DAB5BF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				94A850D03C14ED1FF45ADDAC /* DicyaninMockHandTracking in Frameworks */,
+				36ABFEF96906CA82FC80D7F0 /* DicyaninHandGlove in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		064D30B432BF9A8BCCA7AA1C /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				E8F2CC526FAB771FFE5D9FEB /* DicyaninMockHandTracking */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		3F9613CE33D6048DC6DE05D1 = {
+			isa = PBXGroup;
+			children = (
+				064D30B432BF9A8BCCA7AA1C /* Packages */,
+				A570B3FEF67FDF708D90DCA0 /* Sources */,
+				D46EA72907DA963CE3873306 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A570B3FEF67FDF708D90DCA0 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				AA8471A8E3547936C220ACAE /* ContentView.swift */,
+				D93DFBD2B16BEC585F96A10E /* ImmersiveView.swift */,
+				ECF916AFD35C07E3FDFA8B82 /* PinchSphereView.swift */,
+				3B6138F4CD3754C46FA09214 /* WebcamHandtrackingApp.swift */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		D46EA72907DA963CE3873306 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A387EF5B4453BD08B39667EE /* WebcamHandtracking.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F2B4415311DAA1EF4AD52760 /* WebcamHandtracking */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AB2B7CAF753D695FC63BA03C /* Build configuration list for PBXNativeTarget "WebcamHandtracking" */;
+			buildPhases = (
+				174C8B0845F1E8DADC4523C6 /* Sources */,
+				B9FD58BB8E2AC9F324DAB5BF /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WebcamHandtracking;
+			packageProductDependencies = (
+				68D7594C78150BAF0916BE43 /* DicyaninMockHandTracking */,
+				7AD29DB0343F1CDCAD4D6493 /* DicyaninHandGlove */,
+			);
+			productName = WebcamHandtracking;
+			productReference = A387EF5B4453BD08B39667EE /* WebcamHandtracking.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D0F872B5B17C263B5B85868C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = EAF288E4E7CDA9E7B36E8580 /* Build configuration list for PBXProject "WebcamHandtracking" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 3F9613CE33D6048DC6DE05D1;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				3FFCA630B50EBF31E5DC0DED /* XCLocalSwiftPackageReference "../.." */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = D46EA72907DA963CE3873306 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F2B4415311DAA1EF4AD52760 /* WebcamHandtracking */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		174C8B0845F1E8DADC4523C6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				96F4FE4A82413A1B76CEA345 /* ContentView.swift in Sources */,
+				255C715DA51AACA83E3B7E76 /* ImmersiveView.swift in Sources */,
+				EE7A6230301E410F8A893E4C /* PinchSphereView.swift in Sources */,
+				505D7AB85E7C0E18236F5DA5 /* WebcamHandtrackingApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		323AB40DB3387E7795777AC3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = xros;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				XROS_DEPLOYMENT_TARGET = 1.0;
+			};
+			name = Release;
+		};
+		891B2C10070BA1CA3D40C182 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = xros;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				XROS_DEPLOYMENT_TARGET = 1.0;
+			};
+			name = Debug;
+		};
+		A7F8EEE770DCD5D5F46F30DB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGNING_ALLOWED = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Generated/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.dicyanin.webcamhandtracking;
+				SDKROOT = xros;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = 7;
+			};
+			name = Release;
+		};
+		ABD4DB5451131580C2E206DF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGNING_ALLOWED = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Generated/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.dicyanin.webcamhandtracking;
+				SDKROOT = xros;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = 7;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AB2B7CAF753D695FC63BA03C /* Build configuration list for PBXNativeTarget "WebcamHandtracking" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ABD4DB5451131580C2E206DF /* Debug */,
+				A7F8EEE770DCD5D5F46F30DB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		EAF288E4E7CDA9E7B36E8580 /* Build configuration list for PBXProject "WebcamHandtracking" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				891B2C10070BA1CA3D40C182 /* Debug */,
+				323AB40DB3387E7795777AC3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		3FFCA630B50EBF31E5DC0DED /* XCLocalSwiftPackageReference "../.." */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../..;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		68D7594C78150BAF0916BE43 /* DicyaninMockHandTracking */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DicyaninMockHandTracking;
+		};
+		7AD29DB0343F1CDCAD4D6493 /* DicyaninHandGlove */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DicyaninHandGlove;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = D0F872B5B17C263B5B85868C /* Project object */;
+}
