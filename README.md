@@ -273,3 +273,9 @@ Uses ARKit and the LiDAR Scanner to build a live mesh of your surroundings, then
 <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/a4/ca/3c/a4ca3c52-1768-d6fa-2f2b-4bd37dcde49c/AppIcon.lsr/512x512bb.jpg" width="100" />
 
 Turns your space into a 3D modeling studio with glow and procedural shader effects, loading and cloning models on demand without parsing from disk on the main thread.
+
+---
+
+<p align="center">
+  <img src="Screenshots/dicyanin-labs-logo.png" width="420" alt="Dicyanin Labs" />
+</p>
