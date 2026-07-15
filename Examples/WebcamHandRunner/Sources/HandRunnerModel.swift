@@ -13,11 +13,17 @@ struct DetectedHand: Identifiable {
     var headPosition: SIMD3<Float>
     var yaw: Float
     var isPinching: Bool
+    /// Head-relative 3D position per detected joint (sent over the wire).
+    var joints: [HandJointID: SIMD3<Float>]
     /// Normalized (0...1, top-left origin) screen points for overlay drawing.
-    var wrist: CGPoint
-    var thumbTip: CGPoint
-    var indexTip: CGPoint
+    var overlay: [HandJointID: CGPoint]
     var isLeft: Bool
+
+    /// Wire array in `HandJointID.allCases` order; undetected joints fall back
+    /// to the wrist position so the receiver always gets a complete skeleton.
+    var wireJoints: [SIMD3<Float>] {
+        HandJointID.allCases.map { joints[$0] ?? headPosition }
+    }
 }
 
 /// Owns the camera + Vision pipeline and the network sender, and publishes UI
@@ -185,7 +191,9 @@ final class HandRunnerModel: ObservableObject {
             rightYaw: right?.yaw ?? 0,
             isPinching: anyPinch,
             leftTracked: left != nil,
-            rightTracked: right != nil)
+            rightTracked: right != nil,
+            leftJoints: left?.wireJoints,
+            rightJoints: right?.wireJoints)
         if let l = left { lastLeft = l.headPosition }
         if let r = right { lastRight = r.headPosition }
         sender?.broadcast(packet)

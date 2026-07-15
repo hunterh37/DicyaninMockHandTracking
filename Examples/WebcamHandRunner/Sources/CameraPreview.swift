@@ -15,14 +15,26 @@ struct CameraPreview: NSViewRepresentable {
     }
 
     func updateNSView(_ nsView: PreviewView, context: Context) {
-        if let conn = nsView.previewLayer.connection, conn.isVideoMirroringSupported {
-            conn.automaticallyAdjustsVideoMirroring = false
-            conn.isVideoMirrored = mirrored
-        }
+        nsView.mirrored = mirrored
     }
 
     final class PreviewView: NSView {
         let previewLayer = AVCaptureVideoPreviewLayer()
+
+        /// Mirroring is done with a layer flip instead of the connection's
+        /// isVideoMirrored: the connection can be nil when the view is first
+        /// built (session still configuring) and never gets re-applied.
+        var mirrored = false {
+            didSet { applyMirror() }
+        }
+
+        private func applyMirror() {
+            CATransaction.begin()
+            CATransaction.setDisableActions(true)
+            previewLayer.setAffineTransform(
+                mirrored ? CGAffineTransform(scaleX: -1, y: 1) : .identity)
+            CATransaction.commit()
+        }
         override init(frame frameRect: NSRect) {
             super.init(frame: frameRect)
             wantsLayer = true

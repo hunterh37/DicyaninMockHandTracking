@@ -16,7 +16,10 @@ let package = Package(
         // v4.0: record live/mock glove hand-tracking sessions, persist them,
         // and replay the captured glove animation. Cross-platform (visionOS +
         // macOS), built on the mock controller and the shared transport packet.
-        .library(name: "DicyaninHandRecording", targets: ["DicyaninHandRecording"])
+        .library(name: "DicyaninHandRecording", targets: ["DicyaninHandRecording"]),
+        // Reusable volumetric loading view with a 3D extruded text logo, shown
+        // while heavy modes (e.g. the advanced game mode) load. visionOS only.
+        .library(name: "DicyaninLoadingView", targets: ["DicyaninLoadingView"])
     ],
     targets: [
         .target(
@@ -41,6 +44,10 @@ let package = Package(
             name: "DicyaninHandRecording",
             dependencies: ["DicyaninMockHandTracking", "DicyaninHandTrackingTransport"],
             path: "Sources/DicyaninHandRecording"
+        ),
+        .target(
+            name: "DicyaninLoadingView",
+            path: "Sources/DicyaninLoadingView"
         ),
         .testTarget(
             name: "DicyaninHandRecordingTests",

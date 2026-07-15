@@ -1,4 +1,5 @@
 import SwiftUI
+import DicyaninHandTrackingTransport
 
 struct ContentView: View {
     @EnvironmentObject private var model: HandRunnerModel
@@ -110,17 +111,50 @@ private struct HandOverlay: View {
     let size: CGSize
     let videoSize: CGSize
 
+    /// Wrist-to-fingertip chains for skeleton lines.
+    private static let chains: [[HandJointID]] = [
+        [.wrist, .thumbKnuckle, .thumbIntermediateBase, .thumbIntermediateTip, .thumbTip],
+        [.wrist, .indexKnuckle, .indexIntermediateBase, .indexIntermediateTip, .indexTip],
+        [.wrist, .middleKnuckle, .middleIntermediateBase, .middleIntermediateTip, .middleTip],
+        [.wrist, .ringKnuckle, .ringIntermediateBase, .ringIntermediateTip, .ringTip],
+        [.wrist, .littleKnuckle, .littleIntermediateBase, .littleIntermediateTip, .littleTip],
+    ]
+    private static let tips: Set<HandJointID> = [
+        .thumbTip, .indexTip, .middleTip, .ringTip, .littleTip,
+    ]
+
     var body: some View {
         Canvas { ctx, _ in
             for hand in hands {
                 let color: Color = hand.isLeft ? .blue : .orange
-                marker(ctx, hand.wrist, color, radius: 10, filled: false)
-                marker(ctx, hand.thumbTip, color, radius: 6, filled: hand.isPinching)
-                marker(ctx, hand.indexTip, color, radius: 6, filled: hand.isPinching)
-                if hand.isPinching {
+
+                // Bones: connect consecutive detected joints along each finger.
+                for chain in Self.chains {
                     var path = Path()
-                    path.move(to: point(hand.thumbTip))
-                    path.addLine(to: point(hand.indexTip))
+                    var started = false
+                    for id in chain {
+                        guard let p = hand.overlay[id] else { continue }
+                        if started { path.addLine(to: point(p)) }
+                        else { path.move(to: point(p)); started = true }
+                    }
+                    ctx.stroke(path, with: .color(color.opacity(0.7)), lineWidth: 2)
+                }
+
+                // Joints: ring for the wrist, dots for everything else.
+                for (id, p) in hand.overlay {
+                    if id == .wrist {
+                        marker(ctx, p, color, radius: 9, filled: false)
+                    } else {
+                        marker(ctx, p, color, radius: Self.tips.contains(id) ? 5 : 3.5,
+                               filled: true)
+                    }
+                }
+
+                if hand.isPinching,
+                   let thumb = hand.overlay[.thumbTip], let index = hand.overlay[.indexTip] {
+                    var path = Path()
+                    path.move(to: point(thumb))
+                    path.addLine(to: point(index))
                     ctx.stroke(path, with: .color(.yellow), lineWidth: 3)
                 }
             }

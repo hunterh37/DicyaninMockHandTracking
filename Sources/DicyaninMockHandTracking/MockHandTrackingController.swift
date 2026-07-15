@@ -166,14 +166,86 @@ public final class MockHandTrackingController: ObservableObject {
         if packet.rightTracked { rightHandPosition = packet.rightPosition }
         leftHandYaw = packet.leftYaw
         rightHandYaw = packet.rightYaw
-        if packet.isPinching && !isPinching {
-            simulatePinch()
-        } else if !packet.isPinching {
-            // Honor a held-open hand immediately rather than waiting on the
-            // momentary-pinch timer.
-            isPinching = false
+        #if os(visionOS)
+        // Full skeleton, when the runner sends one. Overwrites the rest-pose
+        // joints the position setters just recomputed, so per-finger motion
+        // from the webcam wins over the canned pose.
+        if packet.leftTracked, let joints = packet.leftJoints {
+            leftHandJoints = Self.skeletonTransforms(joints, yaw: packet.leftYaw)
+        }
+        if packet.rightTracked, let joints = packet.rightJoints {
+            rightHandJoints = Self.skeletonTransforms(joints, yaw: packet.rightYaw)
+        }
+        #endif
+        // Mirror the pinch state directly: a held pinch stays true for the whole
+        // hold (grab interactions need this), instead of the momentary
+        // simulatePinch() pulse which would oscillate while the fingers stay closed.
+        if isPinching != packet.isPinching {
+            pinchTask?.cancel()
+            isPinching = packet.isPinching
         }
     }
+
+    #if os(visionOS)
+    /// ARKit skeleton joint for each wire joint.
+    private static let skeletonName: [HandJointID: HandSkeleton.JointName] = [
+        .wrist: .wrist,
+        .thumbKnuckle: .thumbKnuckle, .thumbIntermediateBase: .thumbIntermediateBase,
+        .thumbIntermediateTip: .thumbIntermediateTip, .thumbTip: .thumbTip,
+        .indexKnuckle: .indexFingerKnuckle, .indexIntermediateBase: .indexFingerIntermediateBase,
+        .indexIntermediateTip: .indexFingerIntermediateTip, .indexTip: .indexFingerTip,
+        .middleKnuckle: .middleFingerKnuckle, .middleIntermediateBase: .middleFingerIntermediateBase,
+        .middleIntermediateTip: .middleFingerIntermediateTip, .middleTip: .middleFingerTip,
+        .ringKnuckle: .ringFingerKnuckle, .ringIntermediateBase: .ringFingerIntermediateBase,
+        .ringIntermediateTip: .ringFingerIntermediateTip, .ringTip: .ringFingerTip,
+        .littleKnuckle: .littleFingerKnuckle, .littleIntermediateBase: .littleFingerIntermediateBase,
+        .littleIntermediateTip: .littleFingerIntermediateTip, .littleTip: .littleFingerTip,
+    ]
+
+    /// Joints ARKit has but Vision does not: metacarpals sit halfway between the
+    /// wrist and the matching knuckle, and the forearm extends away from the palm.
+    private static let metacarpalFor: [(HandSkeleton.JointName, HandJointID)] = [
+        (.indexFingerMetacarpal, .indexKnuckle),
+        (.middleFingerMetacarpal, .middleKnuckle),
+        (.ringFingerMetacarpal, .ringKnuckle),
+        (.littleFingerMetacarpal, .littleKnuckle),
+    ]
+
+    /// Build world-space joint transforms from 21 wire positions
+    /// (`HandJointID.allCases` order). Orientation is the hand yaw for every
+    /// joint: positions carry the articulation, which is what the glove and
+    /// joint-based logic (tips, palm) consume.
+    private static func skeletonTransforms(
+        _ positions: [SIMD3<Float>], yaw: Float
+    ) -> [HandSkeleton.JointName: simd_float4x4] {
+        let ids = HandJointID.allCases
+        guard positions.count >= ids.count else { return [:] }
+        let rot = simd_float4x4(simd_quatf(angle: yaw, axis: [0, 1, 0]))
+        var byID: [HandJointID: SIMD3<Float>] = [:]
+        for (i, id) in ids.enumerated() { byID[id] = positions[i] }
+
+        func transform(_ p: SIMD3<Float>) -> simd_float4x4 {
+            var m = rot
+            m.columns.3 = SIMD4(p, 1)
+            return m
+        }
+
+        var out: [HandSkeleton.JointName: simd_float4x4] = [:]
+        for (id, name) in skeletonName {
+            if let p = byID[id] { out[name] = transform(p) }
+        }
+        if let wrist = byID[.wrist] {
+            for (name, knuckleID) in metacarpalFor {
+                if let k = byID[knuckleID] { out[name] = transform((wrist + k) * 0.5) }
+            }
+            out[.forearmWrist] = transform(wrist)
+            if let middle = byID[.middleKnuckle] {
+                out[.forearmArm] = transform(wrist + (wrist - middle) * 2)
+            }
+        }
+        return out
+    }
+    #endif
 
     /// Connect to a running webcam runner and stream its hand poses into this
     /// controller live. Call once (e.g. from `task {}` on your root view) in

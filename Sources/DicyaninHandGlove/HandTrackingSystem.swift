@@ -128,7 +128,18 @@ public struct HandTrackingSystem: System {
             }
 
             #if targetEnvironment(simulator)
-            driveFromMock(hand, root: entity)
+            // Full-joint sources (webcam bridge, recording playback) publish
+            // world-space joints into the controller; render those so fingers
+            // articulate. The joystick fallback only has a position + yaw.
+            let hasJointSource = MainActor.assumeIsolated {
+                let c = MockHandTrackingController.shared
+                return c.isWebcamConnected || c.isPlayingBack
+            }
+            if hasJointSource {
+                driveFromControllerJoints(hand, root: entity)
+            } else {
+                driveFromMock(hand, root: entity)
+            }
             #else
             // Render from the controller's joints when an external source feeds
             // it, or while a recording replays. Otherwise follow live ARKit from
@@ -142,9 +153,8 @@ public struct HandTrackingSystem: System {
         }
     }
 
-    #if !targetEnvironment(simulator)
     /// Render glove joints from the mock controller's published world-space joint
-    /// transforms (used on device while a recording is replaying).
+    /// transforms (device recording playback, simulator webcam bridge).
     private func driveFromControllerJoints(_ hand: HandTrackingComponent, root: Entity) {
         MainActor.assumeIsolated {
             let joints = (hand.chirality == .left)
@@ -171,7 +181,6 @@ public struct HandTrackingSystem: System {
             updateBones(hand, worldSpace: true)
         }
     }
-    #endif
 
     // MARK: - Building the glove
 

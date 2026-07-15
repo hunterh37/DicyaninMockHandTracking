@@ -3,7 +3,7 @@
 ## Project
 - visionOS app (Apple Vision Pro), Swift + SwiftUI + RealityKit.
 - Build/test with `xcodebuild` against the visionOS simulator or device.
-- Never create new git branches
+- Never create new git branches 
 
 ## Writing rules (strict, applies to ALL output: code, copy, messages, everything)
 - NEVER use em dashes. Not in code, comments, commit messages, user-facing copy, or chat. Use a period, comma, colon, or parentheses instead.
