@@ -16,7 +16,7 @@ struct ContentView: View {
             ZStack {
                 if model.cameraAuthorized {
                     CameraPreview(session: model.session, mirrored: model.mirrored)
-                    HandOverlay(hands: model.hands, size: geo.size)
+                    HandOverlay(hands: model.hands, size: geo.size, videoSize: model.videoSize)
                 } else {
                     cameraDeniedNotice
                 }
@@ -48,8 +48,27 @@ struct ContentView: View {
         .background(.ultraThinMaterial)
     }
 
+    @State private var copied = false
+
     private var controls: some View {
         VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Label(model.clientCount > 0 ? "App connected" : "Waiting for a visionOS app",
+                      systemImage: model.clientCount > 0 ? "checkmark.circle.fill" : "hourglass")
+                    .foregroundStyle(model.clientCount > 0 ? .green : .secondary)
+                    .font(.caption)
+                Spacer()
+                Button {
+                    let pb = NSPasteboard.general
+                    pb.clearContents()
+                    pb.setString(model.diagnosticsReport(), forType: .string)
+                    copied = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { copied = false }
+                } label: {
+                    Label(copied ? "Copied" : "Copy errors / warnings",
+                          systemImage: copied ? "checkmark" : "doc.on.clipboard")
+                }
+            }
             Toggle("Mirror (selfie view)", isOn: $model.mirrored)
             slider("Horizontal reach", value: $model.horizontalSpan, range: 0.2...0.8, unit: "m")
             slider("Vertical reach", value: $model.verticalSpan, range: 0.2...0.6, unit: "m")
@@ -89,6 +108,7 @@ struct ContentView: View {
 private struct HandOverlay: View {
     let hands: [DetectedHand]
     let size: CGSize
+    let videoSize: CGSize
 
     var body: some View {
         Canvas { ctx, _ in
@@ -108,8 +128,19 @@ private struct HandOverlay: View {
         .allowsHitTesting(false)
     }
 
+    /// Maps a normalized (0...1, top-left origin) video point into view space,
+    /// matching the preview layer's `.resizeAspectFill` scale and crop.
     private func point(_ p: CGPoint) -> CGPoint {
-        CGPoint(x: p.x * size.width, y: p.y * size.height)
+        guard videoSize.width > 0, videoSize.height > 0,
+              size.width > 0, size.height > 0 else {
+            return CGPoint(x: p.x * size.width, y: p.y * size.height)
+        }
+        let scale = max(size.width / videoSize.width, size.height / videoSize.height)
+        let drawn = CGSize(width: videoSize.width * scale, height: videoSize.height * scale)
+        let offset = CGPoint(x: (size.width - drawn.width) / 2,
+                             y: (size.height - drawn.height) / 2)
+        return CGPoint(x: offset.x + p.x * drawn.width,
+                       y: offset.y + p.y * drawn.height)
     }
 
     private func marker(_ ctx: GraphicsContext, _ p: CGPoint, _ color: Color,

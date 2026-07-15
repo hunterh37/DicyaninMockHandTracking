@@ -34,6 +34,11 @@ final class HandRunnerModel: ObservableObject {
 
     // Detected hands (for overlay + readout)
     @Published var hands: [DetectedHand] = []
+    /// Pixel size of the camera frames, for aspect-fill-correct overlay mapping.
+    @Published var videoSize: CGSize = CGSize(width: 16, height: 9)
+
+    // Rolling diagnostics log (errors + warnings + key lifecycle events).
+    @Published private(set) var diagnostics: [String] = []
 
     // Operator tuning
     @Published var mirrored: Bool = true {
@@ -53,10 +58,34 @@ final class HandRunnerModel: ObservableObject {
     private var fpsCounter = 0
     private var fpsTimer: Timer?
 
+    private let startedAt = Date()
+
+    func log(_ level: String, _ message: String) {
+        let t = String(format: "%.1f", Date().timeIntervalSince(startedAt))
+        let line = "[\(t)s] \(level): \(message)"
+        diagnostics.append(line)
+        if diagnostics.count > 300 { diagnostics.removeFirst(diagnostics.count - 300) }
+    }
+
+    /// Full report copied to the clipboard for troubleshooting connection issues.
+    func diagnosticsReport() -> String {
+        var out = "WebcamHandRunner diagnostics\n"
+        out += "port: \(servingPort) (default \(HandPoseWire.defaultPort))\n"
+        out += "listener: \(listenerState)\n"
+        out += "connected apps: \(clientCount)\n"
+        out += "camera authorized: \(cameraAuthorized)\n"
+        out += "fps: \(fps)\n"
+        out += "hands detected: \(hands.count)\n"
+        out += "---\n"
+        out += diagnostics.isEmpty ? "(no events logged)" : diagnostics.joined(separator: "\n")
+        return out
+    }
+
     func start() async {
+        log("INFO", "runner starting, expecting port \(HandPoseWire.defaultPort)")
         startSender()
-        pipeline.onFrame = { [weak self] hands in
-            Task { @MainActor in self?.publish(hands) }
+        pipeline.onFrame = { [weak self] hands, frameSize in
+            Task { @MainActor in self?.publish(hands, frameSize: frameSize) }
         }
         await configureCamera()
         startFPSTimer()
@@ -72,18 +101,25 @@ final class HandRunnerModel: ObservableObject {
                     case .ready(let port):
                         self?.servingPort = port
                         self?.listenerState = "serving on port \(port)"
+                        self?.log("INFO", "listener ready on port \(port)")
                     case .failed(let msg):
                         self?.listenerState = "failed: \(msg)"
+                        self?.log("ERROR", "listener failed: \(msg)")
                     }
                 }
             }
             sender.onClientCountChange = { [weak self] count in
-                Task { @MainActor in self?.clientCount = count }
+                Task { @MainActor in
+                    let prev = self?.clientCount ?? 0
+                    self?.clientCount = count
+                    self?.log("INFO", "connected apps: \(prev) -> \(count)")
+                }
             }
             sender.start()
             self.sender = sender
         } catch {
             listenerState = "failed: \(error.localizedDescription)"
+            log("ERROR", "sender init failed: \(error.localizedDescription)")
         }
     }
 
@@ -95,15 +131,28 @@ final class HandRunnerModel: ObservableObject {
         default: granted = false
         }
         cameraAuthorized = granted
-        guard granted else { return }
+        guard granted else {
+            log("ERROR", "camera access denied (System Settings > Privacy & Security > Camera)")
+            return
+        }
 
         session.beginConfiguration()
         session.sessionPreset = .high
-        if let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front)
-            ?? AVCaptureDevice.default(for: .video),
-           let input = try? AVCaptureDeviceInput(device: device),
-           session.canAddInput(input) {
-            session.addInput(input)
+        let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front)
+            ?? AVCaptureDevice.default(for: .video)
+        if device == nil { log("ERROR", "no capture device found") }
+        if let device {
+            do {
+                let input = try AVCaptureDeviceInput(device: device)
+                if session.canAddInput(input) {
+                    session.addInput(input)
+                    log("INFO", "using camera: \(device.localizedName)")
+                } else {
+                    log("ERROR", "cannot add camera input")
+                }
+            } catch {
+                log("ERROR", "camera input failed: \(error.localizedDescription)")
+            }
         }
         let output = AVCaptureVideoDataOutput()
         output.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA]
@@ -115,8 +164,9 @@ final class HandRunnerModel: ObservableObject {
         Task.detached { [session] in session.startRunning() }
     }
 
-    private func publish(_ hands: [DetectedHand]) {
+    private func publish(_ hands: [DetectedHand], frameSize: CGSize) {
         self.hands = hands
+        if frameSize != videoSize { videoSize = frameSize }
         fpsCounter += 1
 
         // Build a packet, holding last position for any hand not seen.

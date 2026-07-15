@@ -13,8 +13,9 @@ import CoreGraphics
 final class HandVisionPipeline: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     let queue = DispatchQueue(label: "dicyanin.handpose.vision")
 
-    /// Called on `queue` with the hands found in a frame (0, 1, or 2).
-    var onFrame: (([DetectedHand]) -> Void)?
+    /// Called on `queue` with the hands found in a frame (0, 1, or 2) and the
+    /// pixel size of that frame (needed to undo aspect-fill cropping in the overlay).
+    var onFrame: (([DetectedHand], CGSize) -> Void)?
 
     // Operator tuning (read on `queue`).
     var mirrored = true
@@ -51,7 +52,9 @@ final class HandVisionPipeline: NSObject, AVCaptureVideoDataOutputSampleBufferDe
         } else if let only = hands.first {
             hands[0].isLeft = only.headPosition.x < 0
         }
-        onFrame?(hands)
+        let frameSize = CGSize(width: CVPixelBufferGetWidth(pixelBuffer),
+                               height: CVPixelBufferGetHeight(pixelBuffer))
+        onFrame?(hands, frameSize)
     }
 
     private func map(_ observation: VNHumanHandPoseObservation) -> DetectedHand? {
