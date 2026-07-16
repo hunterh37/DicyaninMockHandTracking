@@ -211,18 +211,13 @@ HandGloveView(configuration: .init(
 ))
 
 // Your own rigged glove USDZ, added to the app bundle.
-// (Apple's keynote "RightGlove_v001.usdz" was never shipped publicly — supply
-//  your own export, or any glove mesh, here.)
 HandGloveView(configuration: .init(
     style: .model(left: "LeftGlove_v001", right: "RightGlove_v001")
 ))
 ```
 
-> Apple's hand-tracking sample renders joints as plain spheres and ships no glove
-> asset — the `RightGlove_v001.usdz` shown in WWDC23's _Go beyond the window with
-> SwiftUI_ was a keynote demo asset, not a downloadable file. `.glove` gives you a
-> filled, articulated glove with no asset; `.model(left:right:)` is the slot to
-> load a real rigged USDZ when you have one.
+> `.glove` gives you a filled, articulated glove with no asset; `.model(left:right:)`
+> is the slot to load a real rigged USDZ when you have one.
 
 ## Example app
 
