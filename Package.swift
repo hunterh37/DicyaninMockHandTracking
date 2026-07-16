@@ -3,7 +3,7 @@ import PackageDescription
 
 let package = Package(
     name: "DicyaninMockHandTracking",
-    platforms: [.visionOS(.v1), .macOS(.v13)],
+    platforms: [.visionOS(.v1), .macOS(.v13), .iOS("18.0")],
     products: [
         .library(name: "DicyaninMockHandTracking", targets: ["DicyaninMockHandTracking"]),
         // Shared, cross-platform transport used by the macOS webcam runner and
@@ -53,6 +53,16 @@ let package = Package(
             name: "DicyaninHandRecordingTests",
             dependencies: ["DicyaninHandRecording", "DicyaninMockHandTracking", "DicyaninHandTrackingTransport"],
             path: "Tests/DicyaninHandRecordingTests"
+        ),
+        .testTarget(
+            name: "DicyaninHandTrackingTransportTests",
+            dependencies: ["DicyaninHandTrackingTransport"],
+            path: "Tests/DicyaninHandTrackingTransportTests"
+        ),
+        .testTarget(
+            name: "DicyaninMockHandTrackingTests",
+            dependencies: ["DicyaninMockHandTracking", "DicyaninHandTrackingTransport"],
+            path: "Tests/DicyaninMockHandTrackingTests"
         )
     ]
 )
