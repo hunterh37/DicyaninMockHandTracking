@@ -56,6 +56,15 @@ public struct HandGloveConfiguration: Sendable {
     /// or offset to sit correctly on the hand.
     public var modelWristOffset: simd_float4x4
 
+    /// World-space translation added to the rendered gloves. The mock and
+    /// webcam sources use a head-relative convention (y = 0 is eye level), but
+    /// an ImmersiveSpace puts the world origin on the floor at the user's
+    /// feet, so unlifted content renders below the room floor. Set this (for
+    /// example `[0, 1.4, 0]`, roughly eye height) together with the same lift
+    /// on your scene content to bring everything up above the floor. Defaults
+    /// to zero.
+    public var rootOffset: SIMD3<Float>
+
     public init(
         tracksLeftHand: Bool = true,
         tracksRightHand: Bool = true,
@@ -64,7 +73,8 @@ public struct HandGloveConfiguration: Sendable {
         boneRadius: Float = 0.008,
         color: Color = Color(red: 0.10, green: 0.12, blue: 0.16),
         isMetallic: Bool = false,
-        modelWristOffset: simd_float4x4 = matrix_identity_float4x4
+        modelWristOffset: simd_float4x4 = matrix_identity_float4x4,
+        rootOffset: SIMD3<Float> = .zero
     ) {
         self.tracksLeftHand = tracksLeftHand
         self.tracksRightHand = tracksRightHand
@@ -74,6 +84,7 @@ public struct HandGloveConfiguration: Sendable {
         self.color = color
         self.isMetallic = isMetallic
         self.modelWristOffset = modelWristOffset
+        self.rootOffset = rootOffset
     }
 
     /// A sensible default: a dark glove on both hands.

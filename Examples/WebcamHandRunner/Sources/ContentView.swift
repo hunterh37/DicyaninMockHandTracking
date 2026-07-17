@@ -17,6 +17,8 @@ struct ContentView: View {
             ZStack {
                 if model.cameraAuthorized {
                     CameraPreview(session: model.session, mirrored: model.mirrored)
+                    FruitOverlayView(fruit: model.fruit, size: geo.size,
+                                     videoSize: model.videoSize)
                     HandOverlay(hands: model.hands, size: geo.size, videoSize: model.videoSize)
                 } else {
                     cameraDeniedNotice
@@ -70,10 +72,18 @@ struct ContentView: View {
                           systemImage: copied ? "checkmark" : "doc.on.clipboard")
                 }
             }
-            Toggle("Mirror (selfie view)", isOn: $model.mirrored)
+            HStack {
+                Toggle("Mirror (selfie view)", isOn: $model.mirrored)
+                Spacer()
+                Button {
+                    model.resetFruit()
+                } label: {
+                    Label("Reset fruit", systemImage: "arrow.counterclockwise")
+                }
+            }
             slider("Horizontal reach", value: $model.horizontalSpan, range: 0.2...0.8, unit: "m")
             slider("Vertical reach", value: $model.verticalSpan, range: 0.2...0.6, unit: "m")
-            Text("In your visionOS app (simulator), call `MockHandTrackingController.shared.connectToWebcamRunner()` once at launch. Hold your hands up — pinch thumb-to-index to fire.")
+            Text("In your visionOS app (simulator), call `MockHandTrackingController.shared.connectToWebcamRunner()` once at launch. Hold your hands up, pinch thumb-to-index on a fruit to grab it, move it, and let go to throw. The same fruit scene runs in 3D in the visionOS app.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)

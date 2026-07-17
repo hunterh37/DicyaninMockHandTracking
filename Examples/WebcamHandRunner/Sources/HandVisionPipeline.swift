@@ -23,9 +23,12 @@ final class HandVisionPipeline: NSObject, AVCaptureVideoDataOutputSampleBufferDe
     var horizontalSpan: Float = 0.45
     var verticalSpan: Float = 0.35
 
-    // Resting center of the mapped volume (matches the mock controller defaults).
-    private let baseY: Float = -0.20
-    private let baseZ: Float = -0.72
+    // Resting center of the mapped volume (matches the mock controller
+    // defaults). Static so the fruit overlay can invert the same mapping.
+    static let baseY: Float = -0.20
+    static let baseZ: Float = -0.72
+    private var baseY: Float { Self.baseY }
+    private var baseZ: Float { Self.baseZ }
 
     private let request: VNDetectHumanHandPoseRequest = {
         let r = VNDetectHumanHandPoseRequest()
@@ -85,13 +88,28 @@ final class HandVisionPipeline: NSObject, AVCaptureVideoDataOutputSampleBufferDe
             guard let p = points[name], p.confidence > min else { return nil }
             return CGPoint(x: p.location.x, y: p.location.y) // bottom-left origin, y up
         }
-        guard let wrist = pt(.wrist) else { return nil }
-        let middleMCP = pt(.middleMCP) ?? wrist
+        // A hand sliding out of frame loses its anchor joints first. Without a
+        // confident wrist and middle knuckle the depth proxy and the joint
+        // scale below collapse into garbage (teleporting palms, meter-long
+        // fingers), so treat the hand as not detected instead: the packet then
+        // reports it untracked and the consumer holds the last good pose.
+        guard let wrist = pt(.wrist, min: 0.4),
+              let middleMCP = pt(.middleMCP, min: 0.4) else { return nil }
         let thumbTip = pt(.thumbTip) ?? wrist
         let indexTip = pt(.indexTip) ?? wrist
 
         // Depth proxy: a bigger hand (wrist→middleMCP span) reads as closer.
         let handSpan = hypot(middleMCP.x - wrist.x, middleMCP.y - wrist.y)
+        // A collapsed span means the palm is clipped by the frame edge or the
+        // detection is degenerate; the scale math below would explode.
+        guard Float(handSpan) > 0.035 else { return nil }
+        // Reject hands whose anchors sit in the outer margin of the frame,
+        // where the estimator's output is least reliable.
+        let margin: CGFloat = 0.02
+        let inFrame = { (p: CGPoint) in
+            p.x > margin && p.x < 1 - margin && p.y > margin && p.y < 1 - margin
+        }
+        guard inFrame(wrist) || inFrame(middleMCP) else { return nil }
         let depthScale = Float(min(max(handSpan, 0.05), 0.30) - 0.05) / 0.25 // 0…1
         let headZ = baseZ + 0.18 * (0.5 - depthScale) // closer hand → less negative Z
 

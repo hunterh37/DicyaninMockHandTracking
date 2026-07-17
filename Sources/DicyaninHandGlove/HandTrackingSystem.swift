@@ -153,14 +153,25 @@ public struct HandTrackingSystem: System {
         }
     }
 
+    /// Translate a world transform by the configuration's root offset.
+    private static func lifted(_ m: simd_float4x4, by offset: SIMD3<Float>) -> simd_float4x4 {
+        var out = m
+        out.columns.3 += SIMD4(offset, 0)
+        return out
+    }
+
     /// Render glove joints from the mock controller's published world-space joint
     /// transforms (device recording playback, simulator webcam bridge).
     private func driveFromControllerJoints(_ hand: HandTrackingComponent, root: Entity) {
         MainActor.assumeIsolated {
-            let joints = (hand.chirality == .left)
+            let offset = hand.configuration.rootOffset
+            var joints = (hand.chirality == .left)
                 ? MockHandTrackingController.shared.leftHandJoints
                 : MockHandTrackingController.shared.rightHandJoints
             guard !joints.isEmpty else { return }
+            if offset != .zero {
+                joints = joints.mapValues { Self.lifted($0, by: offset) }
+            }
 
             // Rigged-USDZ style: drive the model's skeleton so fingers articulate.
             // Falls back to a rigid wrist follow if the model isn't rigged.
@@ -267,7 +278,8 @@ public struct HandTrackingSystem: System {
         for (jointName, jointEntity) in hand.joints {
             let anchorFromJoint = skeleton.joint(jointName).anchorFromJointTransform
             jointEntity.setTransformMatrix(
-                anchor.originFromAnchorTransform * anchorFromJoint,
+                Self.lifted(anchor.originFromAnchorTransform * anchorFromJoint,
+                            by: hand.configuration.rootOffset),
                 relativeTo: nil
             )
         }
@@ -281,7 +293,8 @@ public struct HandTrackingSystem: System {
     private func driveFromMock(_ hand: HandTrackingComponent, root: Entity) {
         MainActor.assumeIsolated {
             let mock = MockHandTrackingController.shared
-            root.position = (hand.chirality == .left) ? mock.leftHandPosition : mock.rightHandPosition
+            let position = (hand.chirality == .left) ? mock.leftHandPosition : mock.rightHandPosition
+            root.position = position + hand.configuration.rootOffset
             let yaw = (hand.chirality == .left) ? mock.leftHandYaw : mock.rightHandYaw
             root.orientation = simd_quatf(angle: yaw, axis: [0, 1, 0])
         }

@@ -3,7 +3,24 @@ import Vision
 import simd
 import SwiftUI
 import Combine
+import QuartzCore
 import DicyaninHandTrackingTransport
+import DicyaninFruitScene
+
+/// One fruit projected into normalized (0...1, top-left origin) video space
+/// for the 2D overlay. `depthScale` shrinks or grows the sprite slightly to
+/// read as distance from the viewer.
+struct FruitDisplay: Identifiable {
+    let id: Int
+    let kind: FruitKind
+    /// Normalized center in the video frame, top-left origin.
+    let center: CGPoint
+    /// Fruit radius as a fraction of the frame width, before depth scaling.
+    let radiusNorm: CGFloat
+    /// Depth multiplier: nearer fruit render slightly bigger (about 0.85...1.15).
+    let depthScale: CGFloat
+    let isHeld: Bool
+}
 
 /// A detected hand reduced to the few normalized image points we need, plus the
 /// head-relative position we mapped it to. Used both for the wire packet and to
@@ -40,6 +57,9 @@ final class HandRunnerModel: ObservableObject {
 
     // Detected hands (for overlay + readout)
     @Published var hands: [DetectedHand] = []
+    /// Fruit projected into video space for the 2D overlay. The same shared
+    /// simulation the visionOS scene runs, driven by the webcam hands.
+    @Published var fruit: [FruitDisplay] = []
     /// Pixel size of the camera frames, for aspect-fill-correct overlay mapping.
     @Published var videoSize: CGSize = CGSize(width: 16, height: 9)
 
@@ -63,6 +83,8 @@ final class HandRunnerModel: ObservableObject {
     private var sender: HandPoseSender?
     private var fpsCounter = 0
     private var fpsTimer: Timer?
+    private let fruitModel = FruitSceneModel()
+    private var lastFruitUpdate: CFTimeInterval?
 
     private let startedAt = Date()
 
@@ -170,10 +192,70 @@ final class HandRunnerModel: ObservableObject {
         Task.detached { [session] in session.startRunning() }
     }
 
+    func resetFruit() {
+        fruitModel.reset()
+        publishFruit()
+    }
+
+    /// Thumb-to-index midpoint in head space, matching the visionOS grab point.
+    private func pinchPoint(_ hand: DetectedHand) -> SIMD3<Float> {
+        guard let t = hand.joints[.thumbTip], let i = hand.joints[.indexTip] else {
+            return hand.headPosition
+        }
+        return (t + i) * 0.5
+    }
+
+    private func updateFruit(with hands: [DetectedHand]) {
+        let now = CACurrentMediaTime()
+        let dt = Float(now - (lastFruitUpdate ?? now))
+        lastFruitUpdate = now
+        var inputs = hands.map {
+            FruitHandInput(isLeft: $0.isLeft,
+                           pinchPoint: pinchPoint($0),
+                           isPinching: $0.isPinching)
+        }
+        // Tracking-loss grace: hold a briefly-lost hand's last input so a
+        // one-frame detection flicker doesn't drop a held fruit.
+        for input in inputs {
+            lastFruitInput[input.isLeft] = (input, now)
+        }
+        for (side, held) in lastFruitInput where !inputs.contains(where: { $0.isLeft == side }) {
+            if now - held.time < 0.25 { inputs.append(held.input) }
+        }
+        fruitModel.update(hands: inputs, deltaTime: dt > 0 ? dt : 1 / 30)
+        publishFruit()
+    }
+
+    private var lastFruitInput: [Bool: (input: FruitHandInput, time: CFTimeInterval)] = [:]
+
+    private func publishFruit() {
+        fruit = fruitModel.fruits.map { projectFruit($0) }
+    }
+
+    /// Inverts the pipeline's image-to-head mapping so fruit simulated in head
+    /// space lands on the right spot in the video frame, and folds depth (z)
+    /// into a small sprite scale so nearer fruit reads bigger.
+    private func projectFruit(_ fruit: FruitState) -> FruitDisplay {
+        let hSpan = max(horizontalSpan, 0.01)
+        let vSpan = max(verticalSpan, 0.01)
+        let nx = CGFloat(fruit.position.x / (2 * hSpan) + 0.5)
+        let ny = CGFloat(0.5 - (fruit.position.y - HandVisionPipeline.baseY) / (2 * vSpan))
+        // Pipeline z range is baseZ +- 0.09; map to roughly 0.85...1.15.
+        let depth = CGFloat(1 + (fruit.position.z - HandVisionPipeline.baseZ) * 1.6)
+        return FruitDisplay(
+            id: fruit.id,
+            kind: fruit.kind,
+            center: CGPoint(x: nx, y: ny),
+            radiusNorm: CGFloat(fruit.kind.radius / (2 * hSpan)),
+            depthScale: min(max(depth, 0.7), 1.3),
+            isHeld: fruit.isHeld)
+    }
+
     private func publish(_ hands: [DetectedHand], frameSize: CGSize) {
         self.hands = hands
         if frameSize != videoSize { videoSize = frameSize }
         fpsCounter += 1
+        updateFruit(with: hands)
 
         // Build a packet, holding last position for any hand not seen.
         var left = hands.first(where: { $0.isLeft })

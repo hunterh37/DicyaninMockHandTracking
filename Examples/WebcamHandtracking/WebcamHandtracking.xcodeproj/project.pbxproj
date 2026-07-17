@@ -12,7 +12,8 @@
 		505D7AB85E7C0E18236F5DA5 /* WebcamHandtrackingApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B6138F4CD3754C46FA09214 /* WebcamHandtrackingApp.swift */; };
 		94A850D03C14ED1FF45ADDAC /* DicyaninMockHandTracking in Frameworks */ = {isa = PBXBuildFile; productRef = 68D7594C78150BAF0916BE43 /* DicyaninMockHandTracking */; };
 		96F4FE4A82413A1B76CEA345 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA8471A8E3547936C220ACAE /* ContentView.swift */; };
-		EE7A6230301E410F8A893E4C /* PinchSphereView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF916AFD35C07E3FDFA8B82 /* PinchSphereView.swift */; };
+		C07E5D714D048DC667176A70 /* FruitSceneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2A130FF6362BA66BE092BB /* FruitSceneView.swift */; };
+		D23FDEF8FE457B5633876F85 /* DicyaninFruitScene in Frameworks */ = {isa = PBXBuildFile; productRef = 50F9B51B33C8DBD948517A72 /* DicyaninFruitScene */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,7 +22,7 @@
 		AA8471A8E3547936C220ACAE /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		D93DFBD2B16BEC585F96A10E /* ImmersiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImmersiveView.swift; sourceTree = "<group>"; };
 		E8F2CC526FAB771FFE5D9FEB /* DicyaninMockHandTracking */ = {isa = PBXFileReference; lastKnownFileType = folder; name = DicyaninMockHandTracking; path = ../..; sourceTree = SOURCE_ROOT; };
-		ECF916AFD35C07E3FDFA8B82 /* PinchSphereView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinchSphereView.swift; sourceTree = "<group>"; };
+		FA2A130FF6362BA66BE092BB /* FruitSceneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FruitSceneView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +32,7 @@
 			files = (
 				94A850D03C14ED1FF45ADDAC /* DicyaninMockHandTracking in Frameworks */,
 				36ABFEF96906CA82FC80D7F0 /* DicyaninHandGlove in Frameworks */,
+				D23FDEF8FE457B5633876F85 /* DicyaninFruitScene in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -58,8 +60,8 @@
 			isa = PBXGroup;
 			children = (
 				AA8471A8E3547936C220ACAE /* ContentView.swift */,
+				FA2A130FF6362BA66BE092BB /* FruitSceneView.swift */,
 				D93DFBD2B16BEC585F96A10E /* ImmersiveView.swift */,
-				ECF916AFD35C07E3FDFA8B82 /* PinchSphereView.swift */,
 				3B6138F4CD3754C46FA09214 /* WebcamHandtrackingApp.swift */,
 			);
 			path = Sources;
@@ -91,6 +93,7 @@
 			packageProductDependencies = (
 				68D7594C78150BAF0916BE43 /* DicyaninMockHandTracking */,
 				7AD29DB0343F1CDCAD4D6493 /* DicyaninHandGlove */,
+				50F9B51B33C8DBD948517A72 /* DicyaninFruitScene */,
 			);
 			productName = WebcamHandtracking;
 			productReference = A387EF5B4453BD08B39667EE /* WebcamHandtracking.app */;
@@ -135,8 +138,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				96F4FE4A82413A1B76CEA345 /* ContentView.swift in Sources */,
+				C07E5D714D048DC667176A70 /* FruitSceneView.swift in Sources */,
 				255C715DA51AACA83E3B7E76 /* ImmersiveView.swift in Sources */,
-				EE7A6230301E410F8A893E4C /* PinchSphereView.swift in Sources */,
 				505D7AB85E7C0E18236F5DA5 /* WebcamHandtrackingApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -330,6 +333,10 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		50F9B51B33C8DBD948517A72 /* DicyaninFruitScene */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DicyaninFruitScene;
+		};
 		68D7594C78150BAF0916BE43 /* DicyaninMockHandTracking */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DicyaninMockHandTracking;

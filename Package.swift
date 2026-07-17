@@ -19,7 +19,11 @@ let package = Package(
         .library(name: "DicyaninHandRecording", targets: ["DicyaninHandRecording"]),
         // Reusable volumetric loading view with a 3D extruded text logo, shown
         // while heavy modes (e.g. the advanced game mode) load. visionOS only.
-        .library(name: "DicyaninLoadingView", targets: ["DicyaninLoadingView"])
+        .library(name: "DicyaninLoadingView", targets: ["DicyaninLoadingView"]),
+        // Shared pinch-grab fruit simulation: the visionOS immersive scene and
+        // the macOS webcam runner overlay both drive this model with the same
+        // head-relative hand stream, so the fruit behaves identically in each.
+        .library(name: "DicyaninFruitScene", targets: ["DicyaninFruitScene"])
     ],
     targets: [
         .target(
@@ -48,6 +52,15 @@ let package = Package(
         .target(
             name: "DicyaninLoadingView",
             path: "Sources/DicyaninLoadingView"
+        ),
+        .target(
+            name: "DicyaninFruitScene",
+            path: "Sources/DicyaninFruitScene"
+        ),
+        .testTarget(
+            name: "DicyaninFruitSceneTests",
+            dependencies: ["DicyaninFruitScene"],
+            path: "Tests/DicyaninFruitSceneTests"
         ),
         .testTarget(
             name: "DicyaninHandRecordingTests",

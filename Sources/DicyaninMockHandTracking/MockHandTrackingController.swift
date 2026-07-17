@@ -68,6 +68,12 @@ public final class MockHandTrackingController: ObservableObject {
     private var webcamReceiver: HandPoseReceiver?
     private var webcamTask: Task<Void, Never>?
 
+    /// Safety filter applied to every incoming webcam packet before it reaches
+    /// the published state. Guards against estimator glitches near the frame
+    /// edge (teleporting palms, meter-long fingers, pinch flicker) and blends
+    /// smoothly when a lost hand is reacquired. Adjust before connecting.
+    public var webcamStabilization = HandPoseStabilizer.Configuration()
+
     private init() {
         #if os(visionOS)
         recomputeJoints(.left)
@@ -270,10 +276,11 @@ public final class MockHandTrackingController: ObservableObject {
         disconnectWebcamRunner()
         let receiver = HandPoseReceiver(endpoint)
         webcamReceiver = receiver
+        let stabilizer = HandPoseStabilizer(configuration: webcamStabilization)
         webcamTask = Task { @MainActor in
             isWebcamConnected = true
             for await packet in receiver.packets() {
-                apply(packet)
+                apply(stabilizer.process(packet, at: Date.timeIntervalSinceReferenceDate))
             }
             isWebcamConnected = false
         }

@@ -19,6 +19,8 @@ targets:
     dependencies:
       - package: DicyaninMockHandTracking
         product: DicyaninHandTrackingTransport
+      - package: DicyaninMockHandTracking
+        product: DicyaninFruitScene
     info:
       path: Generated/Info.plist
       properties:
